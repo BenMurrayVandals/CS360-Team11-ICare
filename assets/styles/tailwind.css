@@ -1,0 +1,53 @@
+/* Imports Ubuntu font */
+@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer base {
+  /* Sets default font to be Ubuntu */
+  html {
+    font-family: Ubuntu, system-ui, sans-serif;
+  }
+
+  * {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  
+  body,
+  html {
+    height: 100%;
+    width: 100%;
+  }
+}
+
+@layer utilities {
+    /* Added because built in text-transparent doesn't work for some reason */
+    .text-transparent {
+      color: transparent;
+    }
+  
+    /* Added because built in bg-transparent doesn't work for some reason  */
+    .bg-transparent {
+      background: transparent;
+    }
+  
+    /* Added because built in bg-inherit doesn't work for some reason  */
+    .bg-inherit {
+      background-color: inherit;
+    }
+  
+    /* Added because using Tailwind to achieve this style applies a weird transition when the page is loaded/reloaded and I'm not sure why */
+    .gradient-transition {
+      transition: background-position 1s;
+    }
+  
+    /* Transition for Accented Buttons which includes a transiton for the Gradient and the Scale */
+    .button-transition {
+      transition: background-position 1s, transform 200ms ease-in-out;
+    }
+}
