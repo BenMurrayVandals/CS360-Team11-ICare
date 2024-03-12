@@ -15,12 +15,25 @@ model Customer {
     username        String   @unique
     email           String   @unique
     emailNormalized String   @unique
+    address         String   @unique
     password        String
     firstName       String
     lastName        String
     phoneNumber     String?
+    matchPreference Float    @default(50)
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
+
+    //Relationships
+    lawns           CustomerLawn[]
+    morgage         CustomerMorgage[]
+    interior        CustomerInterior[]
+    insurance       CustomerInsurance[]
+    internet        CustomerInternet[]
+    cell            CustomerCell[]
+
+    notification    Notification[]
+    blocked         Blocked[] 
 }
 
 model Business {
@@ -33,4 +46,164 @@ model Business {
     phoneNumber     String?
     createdAt       DateTime @default(now())
     updatedAt       DateTime @updatedAt
+
+    //Relationships
+    lawns           BusinessLawn[]
+    morgage         BusinessMorgage[]
+    interior        BusinessInterior[]
+    insurance       BusinessInsurance[]
+    internet        BusinessInternet[]
+    cell            BusinessCell[]
+
+    notification    Notification[]
+    blocked         Blocked[] 
+}
+
+//LAWN SERVICES
+model CustomerLawn {
+    customerId    String     @id // Foreign key referencing Customer.id
+    lawnSize      Float
+    costPerMonth  Float
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessLawn {
+    businessId    String   // Foreign key referencing Customer.id
+    costPerSqFoot  Float 
+
+    @@id([businessId, costPerSqFoot])
+
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//Interior Services
+model CustomerInterior {
+    customerId    String     @id // Foreign key referencing Customer.id
+    sqFootage     Float
+    costPerMonth  Float
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessInterior {
+    businessId     String   // Foreign key referencing Customer.id
+    costPerSqFoot  Float 
+
+    @@id([businessId, costPerSqFoot])
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//Morgage Services
+model CustomerMorgage {
+    customerId      String     @id // Foreign key referencing Customer.id
+    sqFootage       Float
+    costPerMonth    Float
+    insuranceRate   Float
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessMorgage {
+    businessId     String   // Foreign key referencing Customer.id
+    costPerSqFoot  Float 
+    insuranceRate  Float
+
+    @@id([businessId, costPerSqFoot, insuranceRate])
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//Home Insurance Services
+model CustomerInsurance {
+    customerId          String     @id // Foreign key referencing Customer.id
+    sqFootage           Float
+    totalCoverage       Float
+    costPerMonth        Float
+    allowLessCoverage   Boolean
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessInsurance {
+    businessId    String   // Foreign key referencing Customer.id
+    costPerSqFoot  Float 
+    totalCoverage  Float
+
+    @@id([businessId, costPerSqFoot, totalCoverage])
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//Internet Services
+model CustomerInternet {
+    customerId          String     @id // Foreign key referencing Customer.id
+    speed               Float
+    costPerMonth        Float
+    allowLessSpeed   Boolean
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessInternet {
+    businessId     String   // Foreign key referencing Customer.id
+    costPerMonth  Float 
+    speed          Float
+
+    @@id([businessId, costPerMonth, speed])
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//Cell Services
+model CustomerCell {
+    customerId          String     @id // Foreign key referencing Customer.id
+    GBPerMonth          Float
+    costPerMonth        Float
+    allowLessGB         Boolean
+
+    // Define the relationship to the Customer model
+    customer      Customer @relation(fields: [customerId], references: [id])
+}
+
+model BusinessCell {
+    businessId     String   // Foreign key referencing Customer.id
+    costPerMonth   Float 
+    GBPerMonth     Float
+
+    @@id([businessId, costPerMonth, GBPerMonth])
+    // Define the relationship to the Business model
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+//MISC Tables
+
+model Notification {
+    messageId         String   @id @default(uuid())
+    customerId        String
+    businessId        String
+    serviceType       String
+    businessPrice     Float
+    sentAt            DateTime @default(now())
+    acceptStatus      Boolean
+
+    customer      Customer @relation(fields: [customerId], references: [id])
+    business      Business @relation(fields: [businessId], references: [id])
+}
+
+model Blocked {
+    customerId        String
+    businessId        String
+    blockDate         DateTime @default(now())
+
+    @@id([businessId, customerId])
+    customer      Customer @relation(fields: [customerId], references: [id])
+    business      Business @relation(fields: [businessId], references: [id])
 }

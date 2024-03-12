@@ -4,5 +4,5 @@
   "compilerOptions": {
     "strict": false,
     "noImplicitThis": false,
-  }
+  },
 }
