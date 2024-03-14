@@ -27,6 +27,13 @@ declare global {
     | "bottom-end"
     | "left-start"
     | "left-end";
+  type DropdownHeight = "short" | "medium" | "tall" | "very tall" | "none";
+  interface FlipPadding {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  }
 
   type Breakpoint = "sm" | "md" | "lg" | "xl";
   interface Breakpoints {
@@ -36,6 +43,7 @@ declare global {
     xl: boolean;
   }
 
+  /* USERS */
   type UserType = "customer" | "business";
 
   interface ICustomer {
@@ -65,6 +73,58 @@ declare global {
   }
 
   type IUser = ICustomer | IBusiness;
+
+  /* SERVICES */
+  type ServiceType = "Internet" | "Lawn";
+  // | "Insurance" | "Morgage" | "Interior" | "Cell";
+
+  interface ServiceBase {
+    id: string;
+    // Key is client only, not stored in DB
+    key?: string;
+    type: string;
+  }
+
+  /* CUSTOMER SERVICES */
+  // #region
+  interface ServiceCustomer extends ServiceBase {
+    customerId: string;
+  }
+
+  interface InternetServiceCustomer extends ServiceCustomer {
+    costPerMonth: number;
+    speed: number;
+    allowLowerSpeeds: boolean;
+  }
+
+  interface LawnServiceCustomer extends ServiceCustomer {
+    costPerMonth: number;
+    lawnSize: number;
+  }
+  // #endregion
+
+  /* BUSINESS SERVICES */
+  // #region
+  interface ServiceBusiness extends ServiceBase {
+    customerId: string;
+  }
+
+  interface InternetServiceBusiness extends ServiceBusiness {
+    costPerMonth: number;
+    speed: number;
+  }
+
+  interface LawnServiceBusiness extends ServiceBusiness {
+    costPerSqFoot: number;
+  }
+  // #endregion
+
+  type Service =
+    | ServiceBase
+    | InternetServiceCustomer
+    | LawnServiceCustomer
+    | InternetServiceBusiness
+    | LawnServiceBusiness;
 
   /* ALERTS */
   interface Alert {

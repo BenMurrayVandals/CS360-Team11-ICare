@@ -1,9 +1,11 @@
 import { useUserStore } from "~~/store/user";
+import { useServiceStore } from "~~/store/service";
 
 export const useAuth = () => {
   const { Alert } = useAlerts();
 
   const userStore = useUserStore();
+  const serviceStore = useServiceStore();
 
   // Signs up a new Customer using the passed Username, First Name, Last Name, Email, and Password
   const signupCustomer = async ({
@@ -162,6 +164,7 @@ export const useAuth = () => {
     setTimeout(() => {
       // Reset all Stores
       userStore.$reset();
+      serviceStore.$reset();
     }, 0);
   };
 
