@@ -1,10 +1,9 @@
 /* Imports Ubuntu font */
-@import url('https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap");
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
 
 @layer base {
   /* Sets default font to be Ubuntu */
@@ -17,7 +16,7 @@
     margin: 0;
     box-sizing: border-box;
   }
-  
+
   body,
   html {
     height: 100%;
@@ -25,29 +24,141 @@
   }
 }
 
+@layer components {
+  /* SCROLLBAR BASE */
+  /* Hides Scrollbar for Chrome, Safari and Opera */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Hides Scrollbar for IE, Edge, and Firefox */
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+
+  /* Base sized Scrollbar for Chrome, Safari, and Opera */
+  .scrollbar-base::-webkit-scrollbar {
+    width: 16px;
+  }
+
+  /* Thin sized Scrollbar for Chrome, Safari, and Opera */
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  /* Base sized Scrollbar for Firefox */
+  .scrollbar-base {
+    scrollbar-width: auto;
+  }
+
+  /* Thin sized Scrollbar for Firefox */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+
+  /* SCROLL TRACK - (Chrome, Safari, and Opera) */
+  /* Sets a Margin for the Scroll Track along the Y-Axis */
+  ::-webkit-scrollbar-track {
+    margin-block: 4px;
+  }
+
+  /* Transparent Scroll Track */
+  .scroll-track-transparent::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+
+  /* Very Dark Scroll Track */
+  .scroll-track-very-dark::-webkit-scrollbar-track {
+    background-color: theme("colors.slate.950");
+  }
+
+  /* Dark Scroll Track */
+  .scroll-track-dark::-webkit-scrollbar-track {
+    background-color: theme("colors.slate.900");
+  }
+
+  /* SCROLL THUMB */
+  /* Adds a Border to the Scroll Thumb that acts as a Margin, since Margin can't be added to the Scroll Thumb directly */
+  ::-webkit-scrollbar-thumb {
+    border: solid 4px transparent;
+    border-radius: 9999px;
+  }
+
+  /* Very Dark - Scroll Thumb (Chrome, Safari, and Opera) */
+  .scroll-thumb-very-dark::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px theme("colors.slate.950");
+  }
+
+  /* Very Dark - Scroll Thumb (Firefox) */
+  .scroll-thumb-very-dark {
+    scrollbar-color: theme("colors.slate.950") transparent;
+  }
+
+  /* Dark - Scroll Thumb (Chrome, Safari, and Opera) */
+  .scroll-thumb-dark::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px theme("colors.slate.900");
+  }
+
+  /* Dark - Scroll Thumb (Firefox) */
+  .scroll-thumb-dark {
+    scrollbar-color: theme("colors.slate.900") transparent;
+  }
+
+  /* Normal - Scroll Thumb (Chrome, Safari, and Opera) */
+  .scroll-thumb-normal::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px theme("colors.slate.800");
+  }
+
+  /* Normal - Scroll Thumb (Firefox) */
+  .scroll-thumb-normal {
+    scrollbar-color: theme("colors.slate.800") transparent;
+  }
+
+  /* Light - Scroll Thumb (Chrome, Safari, and Opera) */
+  .scroll-thumb-light::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px theme("colors.slate.500");
+  }
+
+  /* Light - Scroll Thumb (Firefox) */
+  .scroll-thumb-light {
+    scrollbar-color: theme("colors.slate.500") transparent;
+  }
+
+  /* Very Light - Scroll Thumb (Chrome, Safari, and Opera) */
+  .scroll-thumb-very-light::-webkit-scrollbar-thumb {
+    box-shadow: inset 0 0 10px 10px theme("colors.very-light");
+  }
+
+  /* Very Light - Scroll Thumb (Firefox) */
+  .scroll-thumb-very-light {
+    scrollbar-color: theme("colors.very-light") transparent;
+  }
+}
+
 @layer utilities {
-    /* Added because built in text-transparent doesn't work for some reason */
-    .text-transparent {
-      color: transparent;
-    }
-  
-    /* Added because built in bg-transparent doesn't work for some reason  */
-    .bg-transparent {
-      background: transparent;
-    }
-  
-    /* Added because built in bg-inherit doesn't work for some reason  */
-    .bg-inherit {
-      background-color: inherit;
-    }
-  
-    /* Added because using Tailwind to achieve this style applies a weird transition when the page is loaded/reloaded and I'm not sure why */
-    .gradient-transition {
-      transition: background-position 1s;
-    }
-  
-    /* Transition for Accented Buttons which includes a transiton for the Gradient and the Scale */
-    .button-transition {
-      transition: background-position 1s, transform 200ms ease-in-out;
-    }
+  /* Added because built in text-transparent doesn't work for some reason */
+  .text-transparent {
+    color: transparent;
+  }
+
+  /* Added because built in bg-transparent doesn't work for some reason  */
+  .bg-transparent {
+    background: transparent;
+  }
+
+  /* Added because built in bg-inherit doesn't work for some reason  */
+  .bg-inherit {
+    background-color: inherit;
+  }
+
+  /* Added because using Tailwind to achieve this style applies a weird transition when the page is loaded/reloaded and I'm not sure why */
+  .gradient-transition {
+    transition: background-position 1s;
+  }
+
+  /* Transition for Accented Buttons which includes a transiton for the Gradient and the Scale */
+  .button-transition {
+    transition: background-position 1s, transform 200ms ease-in-out;
+  }
 }
