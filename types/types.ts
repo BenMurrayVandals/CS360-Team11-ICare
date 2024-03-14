@@ -44,10 +44,12 @@ declare global {
     username: string;
     email: string;
     emailNormalized: string;
+    address: string;
     password?: string;
     firstName: string;
     lastName: string;
     phoneNumber?: string;
+    matchPreference: number;
     createdAt: Date;
     updatedAt?: Date;
   }
@@ -62,6 +64,83 @@ declare global {
     phoneNumber?: string;
     createdAt: Date;
     updatedAt?: Date;
+  }
+
+  //Customer Tables
+  interface CustomerLawn {
+    customerId: string;
+    lawnSize: number;
+    costPerMonth: number;
+  }
+
+  interface CustomerInterior {
+    customerId: string;
+    sqFootage: number;
+    costPerMonth: number;
+  }
+
+  interface CustomerMorgage {
+    customerId: string;
+    sqFootage: number;
+    costPerMonth: number;
+    insuranceRate: number;
+  }
+  
+  interface CustomerInsurance {
+    customerId: string;
+    sqFootage: number;
+    totalCoverage: number;
+    costPerMonth: number
+    allowLessCoverage: boolean;
+  }
+
+  interface CustomerInternet {
+    customerId: string;
+    speed: number;
+    costPerMonth: number
+    allowLessSpeed: boolean;
+  }
+
+  interface CustomerCell {
+    customerId: string;
+    GBPerMonth: number;
+    costPerMonth: number
+    allowLessGB: boolean;
+  }
+
+  //Business Tables
+  interface BusinessLawn {
+    businessId: string;
+    costPerSqFoot: number;
+  }
+
+  interface BusinessInterior {
+    businessId: string;
+    costPerSqFoot: number;
+  }
+
+  interface BusinessMorgage {
+    businessId: string;
+    costPerSqFoot: number;
+    insuranceRate: number;
+  }
+
+  interface BusinessInsurance {
+    businessId: string;
+    costPerSqFoot: number;
+    totalCoverage: number;
+  }
+
+  interface BusinessInternet {
+    businessId: string;
+    speed: number;
+    costPerMonth: number
+  }
+
+  interface BusinessCell {
+    businessId: string;
+    GBPerMonth: number;
+    costPerMonth: number
   }
 
   type IUser = ICustomer | IBusiness;
