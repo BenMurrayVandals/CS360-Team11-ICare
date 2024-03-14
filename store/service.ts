@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { useUserStore } from "~~/store/user";
 
 export const useServiceStore = defineStore("service", () => {
-  const userStore = useUserStore()
+  const userStore = useUserStore();
 
   const services = ref<Service[]>([
     {
@@ -11,7 +11,7 @@ export const useServiceStore = defineStore("service", () => {
       type: "Internet",
       costPerMonth: 20,
       speed: 57,
-      allowLowerSpeeds: true,
+      allowLessSpeed: true,
     },
   ]);
   /* RESET USER STATE */

@@ -239,7 +239,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "costPerMonth",
         title: "Cost per Month",
         required: true,
-        selected: (props.service as InternetServiceCustomer)?.costPerMonth ?? 0,
+        selected: (props.service as CustomerInternet)?.costPerMonth ?? 0,
         min: 0,
         max: 1000,
         text: {
@@ -254,7 +254,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "speed",
         title: "Internet Speed",
         required: true,
-        selected: (props.service as InternetServiceCustomer)?.speed ?? 0,
+        selected: (props.service as CustomerInternet)?.speed ?? 0,
         min: 0,
         max: 1000,
         text: {
@@ -264,12 +264,12 @@ const serviceInputs = ref<ServiceInputs>({
         errors: [],
         warnings: [],
       },
-      allowLowerSpeeds: {
+      allowLessSpeed: {
         type: "toggle",
-        id: "allowLowerSpeeds",
+        id: "allowLessSpeed",
         title: "Allow Lower Speeds",
         required: false,
-        selected: (props.service as InternetServiceCustomer)?.allowLowerSpeeds ?? false,
+        selected: (props.service as CustomerInternet)?.allowLessSpeed ?? false,
         errors: [],
         warnings: [],
       },
@@ -280,7 +280,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "size",
         title: "Lawn Size",
         required: true,
-        selected: (props.service as LawnServiceCustomer)?.lawnSize ?? 0,
+        selected: (props.service as CustomerLawn)?.lawnSize ?? 0,
         min: 0,
         max: 100000,
         text: {
@@ -295,7 +295,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "costPerMonth",
         title: "Cost per Month",
         required: true,
-        selected: (props.service as LawnServiceCustomer)?.costPerMonth ?? 0,
+        selected: (props.service as CustomerLawn)?.costPerMonth ?? 0,
         min: 0,
         max: 1000,
         text: {
@@ -314,7 +314,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "costPerMonth",
         title: "Cost per Month",
         required: true,
-        selected: (props.service as InternetServiceBusiness)?.costPerMonth ?? 0,
+        selected: (props.service as BusinessInternet)?.costPerMonth ?? 0,
         min: 0,
         max: 1000,
         text: {
@@ -329,7 +329,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "speed",
         title: "Internet Speed",
         required: true,
-        selected: (props.service as InternetServiceBusiness)?.speed ?? 0,
+        selected: (props.service as BusinessInternet)?.speed ?? 0,
         min: 0,
         max: 1000,
         text: {
@@ -346,7 +346,7 @@ const serviceInputs = ref<ServiceInputs>({
         id: "costPerSqFoot",
         title: "Cost per Sq Foot",
         required: true,
-        selected: (props.service as LawnServiceBusiness)?.costPerSqFoot ?? 0,
+        selected: (props.service as BusinessLawn)?.costPerSqFoot ?? 0,
         min: 0,
         max: 1000,
         text: {

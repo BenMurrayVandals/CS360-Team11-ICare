@@ -74,83 +74,6 @@ declare global {
     updatedAt?: Date;
   }
 
-  //Customer Tables
-  interface CustomerLawn {
-    customerId: string;
-    lawnSize: number;
-    costPerMonth: number;
-  }
-
-  interface CustomerInterior {
-    customerId: string;
-    sqFootage: number;
-    costPerMonth: number;
-  }
-
-  interface CustomerMorgage {
-    customerId: string;
-    sqFootage: number;
-    costPerMonth: number;
-    insuranceRate: number;
-  }
-  
-  interface CustomerInsurance {
-    customerId: string;
-    sqFootage: number;
-    totalCoverage: number;
-    costPerMonth: number
-    allowLessCoverage: boolean;
-  }
-
-  interface CustomerInternet {
-    customerId: string;
-    speed: number;
-    costPerMonth: number
-    allowLessSpeed: boolean;
-  }
-
-  interface CustomerCell {
-    customerId: string;
-    GBPerMonth: number;
-    costPerMonth: number
-    allowLessGB: boolean;
-  }
-
-  //Business Tables
-  interface BusinessLawn {
-    businessId: string;
-    costPerSqFoot: number;
-  }
-
-  interface BusinessInterior {
-    businessId: string;
-    costPerSqFoot: number;
-  }
-
-  interface BusinessMorgage {
-    businessId: string;
-    costPerSqFoot: number;
-    insuranceRate: number;
-  }
-
-  interface BusinessInsurance {
-    businessId: string;
-    costPerSqFoot: number;
-    totalCoverage: number;
-  }
-
-  interface BusinessInternet {
-    businessId: string;
-    speed: number;
-    costPerMonth: number
-  }
-
-  interface BusinessCell {
-    businessId: string;
-    GBPerMonth: number;
-    costPerMonth: number
-  }
-
   type IUser = ICustomer | IBusiness;
 
   /* SERVICES */
@@ -166,44 +89,95 @@ declare global {
 
   /* CUSTOMER SERVICES */
   // #region
-  interface ServiceCustomer extends ServiceBase {
+  interface CustomerService extends ServiceBase {
     customerId: string;
   }
 
-  interface InternetServiceCustomer extends ServiceCustomer {
+  interface CustomerLawn extends CustomerService {
+    lawnSize: number;
     costPerMonth: number;
-    speed: number;
-    allowLowerSpeeds: boolean;
   }
 
-  interface LawnServiceCustomer extends ServiceCustomer {
+  interface CustomerInterior extends CustomerService {
+    sqFootage: number;
     costPerMonth: number;
-    lawnSize: number;
+  }
+
+  interface CustomerMorgage extends CustomerService {
+    sqFootage: number;
+    costPerMonth: number;
+    insuranceRate: number;
+  }
+
+  interface CustomerInsurance extends CustomerService {
+    sqFootage: number;
+    totalCoverage: number;
+    costPerMonth: number;
+    allowLessCoverage: boolean;
+  }
+
+  interface CustomerInternet extends CustomerService {
+    speed: number;
+    costPerMonth: number;
+    allowLessSpeed: boolean;
+  }
+
+  interface CustomerCell extends CustomerService {
+    GBPerMonth: number;
+    costPerMonth: number;
+    allowLessGB: boolean;
   }
   // #endregion
 
   /* BUSINESS SERVICES */
   // #region
-  interface ServiceBusiness extends ServiceBase {
-    customerId: string;
+  interface BusinessService extends ServiceBase {
+    businessId: string;
   }
 
-  interface InternetServiceBusiness extends ServiceBusiness {
-    costPerMonth: number;
-    speed: number;
-  }
-
-  interface LawnServiceBusiness extends ServiceBusiness {
+  interface BusinessLawn extends BusinessService {
     costPerSqFoot: number;
+  }
+
+  interface BusinessInterior extends BusinessService {
+    costPerSqFoot: number;
+  }
+
+  interface BusinessMorgage extends BusinessService {
+    costPerSqFoot: number;
+    insuranceRate: number;
+  }
+
+  interface BusinessInsurance extends BusinessService {
+    costPerSqFoot: number;
+    totalCoverage: number;
+  }
+
+  interface BusinessInternet extends BusinessService {
+    speed: number;
+    costPerMonth: number;
+  }
+
+  interface BusinessCell extends BusinessService {
+    GBPerMonth: number;
+    costPerMonth: number;
   }
   // #endregion
 
   type Service =
     | ServiceBase
-    | InternetServiceCustomer
-    | LawnServiceCustomer
-    | InternetServiceBusiness
-    | LawnServiceBusiness;
+    | CustomerLawn
+    | CustomerInterior
+    | CustomerMorgage
+    | CustomerInsurance
+    | CustomerInternet
+    | CustomerCell
+    | BusinessLawn
+    | BusinessInterior
+    | BusinessMorgage
+    | BusinessInsurance
+    | BusinessInternet
+    | BusinessCell;
 
   /* ALERTS */
   interface Alert {

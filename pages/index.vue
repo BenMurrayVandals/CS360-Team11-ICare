@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col items-center justify-start bg-slate-950 min-h-screen">
     <NavBar />
-    <div class="flex flex-col items-center gap-y-6 py-12 w-2/3">
+    <div v-if="userStore.isLoggedIn" class="flex flex-col items-center gap-y-6 py-12 w-2/3">
       <TransitionGroup @beforeLeave="positionLeavingElement" name="users">
         <LayoutsService
           v-for="service in serviceStore.services"
