@@ -15,7 +15,7 @@ model Customer {
     username        String   @unique
     email           String   @unique
     emailNormalized String   @unique
-    address         String   @unique
+    address         String?  @unique
     password        String
     firstName       String
     lastName        String
@@ -61,7 +61,9 @@ model Business {
 
 //LAWN SERVICES
 model CustomerLawn {
-    customerId    String     @id // Foreign key referencing Customer.id
+    id            String      @id @default(uuid())
+    serviceType   String      @default("Lawn")
+    customerId    String      @unique // Foreign key referencing Customer.id
     lawnSize      Float
     costPerMonth  Float
 
@@ -70,10 +72,10 @@ model CustomerLawn {
 }
 
 model BusinessLawn {
-    businessId    String   // Foreign key referencing Customer.id
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Lawn")
+    businessId     String      // Foreign key referencing Customer.id
     costPerSqFoot  Float 
-
-    @@id([businessId, costPerSqFoot])
 
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
@@ -81,7 +83,9 @@ model BusinessLawn {
 
 //Interior Services
 model CustomerInterior {
-    customerId    String     @id // Foreign key referencing Customer.id
+    id            String      @id @default(uuid())
+    serviceType   String      @default("Interior")
+    customerId    String      @unique // Foreign key referencing Customer.id
     sqFootage     Float
     costPerMonth  Float
 
@@ -90,17 +94,20 @@ model CustomerInterior {
 }
 
 model BusinessInterior {
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Interior")
     businessId     String   // Foreign key referencing Customer.id
     costPerSqFoot  Float 
 
-    @@id([businessId, costPerSqFoot])
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
 }
 
 //Morgage Services
 model CustomerMorgage {
-    customerId      String     @id // Foreign key referencing Customer.id
+    id              String      @id @default(uuid())
+    serviceType     String      @default("Morgage")
+    customerId      String      @unique // Foreign key referencing Customer.id
     sqFootage       Float
     costPerMonth    Float
     insuranceRate   Float
@@ -110,18 +117,21 @@ model CustomerMorgage {
 }
 
 model BusinessMorgage {
-    businessId     String   // Foreign key referencing Customer.id
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Morgage")
+    businessId     String      // Foreign key referencing Customer.id
     costPerSqFoot  Float 
     insuranceRate  Float
 
-    @@id([businessId, costPerSqFoot, insuranceRate])
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
 }
 
 //Home Insurance Services
 model CustomerInsurance {
-    customerId          String     @id // Foreign key referencing Customer.id
+    id                  String     @id @default(uuid())
+    serviceType         String      @default("Insurance")
+    customerId          String     @unique // Foreign key referencing Customer.id
     sqFootage           Float
     totalCoverage       Float
     costPerMonth        Float
@@ -132,39 +142,45 @@ model CustomerInsurance {
 }
 
 model BusinessInsurance {
-    businessId    String   // Foreign key referencing Customer.id
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Insurance")
+    businessId     String      // Foreign key referencing Customer.id
     costPerSqFoot  Float 
     totalCoverage  Float
 
-    @@id([businessId, costPerSqFoot, totalCoverage])
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
 }
 
 //Internet Services
 model CustomerInternet {
-    customerId          String     @id // Foreign key referencing Customer.id
+    id                  String     @id @default(uuid())
+    serviceType         String      @default("Internet")
+    customerId          String     @unique // Foreign key referencing Customer.id
     speed               Float
     costPerMonth        Float
-    allowLessSpeed   Boolean
+    allowLessSpeed      Boolean
 
     // Define the relationship to the Customer model
     customer      Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessInternet {
-    businessId     String   // Foreign key referencing Customer.id
-    costPerMonth  Float 
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Internet")
+    businessId     String      // Foreign key referencing Customer.id
+    costPerMonth   Float 
     speed          Float
 
-    @@id([businessId, costPerMonth, speed])
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
 }
 
 //Cell Services
 model CustomerCell {
-    customerId          String     @id // Foreign key referencing Customer.id
+    id                  String     @id @default(uuid())
+    serviceType         String      @default("Cell")
+    customerId          String     @unique // Foreign key referencing Customer.id
     GBPerMonth          Float
     costPerMonth        Float
     allowLessGB         Boolean
@@ -174,11 +190,12 @@ model CustomerCell {
 }
 
 model BusinessCell {
-    businessId     String   // Foreign key referencing Customer.id
+    id             String      @id @default(uuid())
+    serviceType    String      @default("Cell")
+    businessId     String      // Foreign key referencing Customer.id
     costPerMonth   Float 
     GBPerMonth     Float
 
-    @@id([businessId, costPerMonth, GBPerMonth])
     // Define the relationship to the Business model
     business      Business @relation(fields: [businessId], references: [id])
 }
@@ -186,7 +203,7 @@ model BusinessCell {
 //MISC Tables
 
 model Notification {
-    messageId         String   @id @default(uuid())
+    id                String   @id @default(uuid())
     customerId        String
     businessId        String
     serviceType       String
@@ -199,11 +216,11 @@ model Notification {
 }
 
 model Blocked {
+    id                String      @id @default(uuid())
     customerId        String
     businessId        String
     blockDate         DateTime @default(now())
 
-    @@id([businessId, customerId])
     customer      Customer @relation(fields: [customerId], references: [id])
     business      Business @relation(fields: [businessId], references: [id])
 }
