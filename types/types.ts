@@ -45,7 +45,6 @@ declare global {
 
   /* USERS */
   type UserType = "customer" | "business";
-  type ServiceType = "Lawn" | "Interior" | "Morgage" | "Insurance" | "Internet" | "Cell";
 
   interface ICustomer {
     id: string;
@@ -78,8 +77,7 @@ declare global {
   type IUser = ICustomer | IBusiness;
 
   /* SERVICES */
-  type ServiceType = "Internet" | "Lawn";
-  // | "Insurance" | "Morgage" | "Interior" | "Cell";
+  type ServiceType = "Lawn" | "Interior" | "Morgage" | "Insurance" | "Internet" | "Cell";
 
   interface ServiceBase {
     id: string;
@@ -179,6 +177,25 @@ declare global {
     | BusinessInsurance
     | BusinessInternet
     | BusinessCell;
+
+  /* NOTIFICATION */
+  interface Notification {
+    id: string;
+    customerId: string;
+    businessId: string;
+    serviceType: string;
+    businessPrice: string;
+    sentAt: Date;
+    acceptStatus: boolean;
+  }
+
+  /* BLOCKED */
+  interface Blocked {
+    id: string;
+    customerId: string;
+    businessId: string;
+    blockDate: Date;
+  }
 
   /* ALERTS */
   interface Alert {
