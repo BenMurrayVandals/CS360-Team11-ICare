@@ -27,6 +27,13 @@ declare global {
     | "bottom-end"
     | "left-start"
     | "left-end";
+  type DropdownHeight = "short" | "medium" | "tall" | "very tall" | "none";
+  interface FlipPadding {
+    top?: number;
+    right?: number;
+    bottom?: number;
+    left?: number;
+  }
 
   type Breakpoint = "sm" | "md" | "lg" | "xl";
   interface Breakpoints {
@@ -36,6 +43,7 @@ declare global {
     xl: boolean;
   }
 
+  /* USERS */
   type UserType = "customer" | "business";
   type ServiceType = "Lawn" | "Interior" | "Morgage" | "Insurance" | "Internet" | "Cell";
 
@@ -67,127 +75,110 @@ declare global {
     updatedAt?: Date;
   }
 
-  //Customer Tables
-  interface CustomerLawn {
+  type IUser = ICustomer | IBusiness;
+
+  /* SERVICES */
+  type ServiceType = "Internet" | "Lawn";
+  // | "Insurance" | "Morgage" | "Interior" | "Cell";
+
+  interface ServiceBase {
     id: string;
-    serviceType: string;
+    // Key is client only, not stored in DB
+    key?: string;
+    type: string;
+  }
+
+  /* CUSTOMER SERVICES */
+  // #region
+  interface CustomerService extends ServiceBase {
     customerId: string;
+  }
+
+  interface CustomerLawn extends CustomerService {
     lawnSize: number;
     costPerMonth: number;
   }
 
-  interface CustomerInterior {
-    id: string;
-    serviceType: string;
-    customerId: string;
+  interface CustomerInterior extends CustomerService {
     sqFootage: number;
     costPerMonth: number;
   }
 
-  interface CustomerMorgage {
-    id: string;
-    serviceType: string;
-    customerId: string;
+  interface CustomerMorgage extends CustomerService {
     sqFootage: number;
     costPerMonth: number;
     insuranceRate: number;
   }
-  
-  interface CustomerInsurance {
-    id: string;
-    serviceType: string;
-    customerId: string;
+
+  interface CustomerInsurance extends CustomerService {
     sqFootage: number;
     totalCoverage: number;
-    costPerMonth: number
+    costPerMonth: number;
     allowLessCoverage: boolean;
   }
 
-  interface CustomerInternet {
-    id: string;
-    serviceType: string;
-    customerId: string;
+  interface CustomerInternet extends CustomerService {
     speed: number;
-    costPerMonth: number
+    costPerMonth: number;
     allowLessSpeed: boolean;
   }
 
-  interface CustomerCell {
-    id: string;
-    serviceType: string;
-    customerId: string;
+  interface CustomerCell extends CustomerService {
     GBPerMonth: number;
-    costPerMonth: number
+    costPerMonth: number;
     allowLessGB: boolean;
   }
+  // #endregion
 
-  //Business Tables
-  interface BusinessLawn {
-    id: string;
-    serviceType: string;
+  /* BUSINESS SERVICES */
+  // #region
+  interface BusinessService extends ServiceBase {
     businessId: string;
+  }
+
+  interface BusinessLawn extends BusinessService {
     costPerSqFoot: number;
   }
 
-  interface BusinessInterior {
-    id: string;
-    serviceType: string;
-    businessId: string;
+  interface BusinessInterior extends BusinessService {
     costPerSqFoot: number;
   }
 
-  interface BusinessMorgage {
-    id: string;
-    serviceType: string;
-    businessId: string;
+  interface BusinessMorgage extends BusinessService {
     costPerSqFoot: number;
     insuranceRate: number;
   }
 
-  interface BusinessInsurance {
-    id: string;
-    serviceType: string;
-    businessId: string;
+  interface BusinessInsurance extends BusinessService {
     costPerSqFoot: number;
     totalCoverage: number;
   }
 
-  interface BusinessInternet {
-    id: string;
-    serviceType: string;
-    businessId: string;
+  interface BusinessInternet extends BusinessService {
     speed: number;
-    costPerMonth: number
+    costPerMonth: number;
   }
 
-  interface BusinessCell {
-    id: string;
-    serviceType: string;
-    businessId: string;
+  interface BusinessCell extends BusinessService {
     GBPerMonth: number;
-    costPerMonth: number
+    costPerMonth: number;
   }
+  // #endregion
 
-  interface Notification {
-    id: string;
-    customerId: string;
-    businessId: string;
-    serviceType: string;
-    businessPrice: number;
-    sentAt: Date;
-    acceptStatus: boolean;
-  }
-
-  interface Blocked {
-    id: string;
-    customerId: string;
-    businessId: string;
-    blockDate: Date;
-  }
-
-  type IUser = ICustomer | IBusiness;
-  type ICustomerServices = CustomerLawn | CustomerInterior | CustomerMorgage | CustomerInsurance | CustomerInternet | CustomerCell;
-  type IBusinessServices = BusinessLawn | BusinessInterior | BusinessMorgage | BusinessInsurance | BusinessInternet | BusinessCell;
+  type Service =
+    | ServiceBase
+    | CustomerLawn
+    | CustomerInterior
+    | CustomerMorgage
+    | CustomerInsurance
+    | CustomerInternet
+    | CustomerCell
+    | BusinessLawn
+    | BusinessInterior
+    | BusinessMorgage
+    | BusinessInsurance
+    | BusinessInternet
+    | BusinessCell;
 
   /* ALERTS */
   interface Alert {

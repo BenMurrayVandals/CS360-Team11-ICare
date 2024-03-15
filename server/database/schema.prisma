@@ -15,7 +15,7 @@ model Customer {
     username        String   @unique
     email           String   @unique
     emailNormalized String   @unique
-    address         String?  @unique
+    address         String??  @unique
     password        String
     firstName       String
     lastName        String
