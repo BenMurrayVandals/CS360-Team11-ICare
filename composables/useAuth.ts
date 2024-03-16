@@ -155,16 +155,17 @@ export const useAuth = () => {
     // This essentially logs the User out on the Server Side
     await $fetch("/api/logout");
 
-    // Navigates to the Home page
-    await navigateTo("/");
-
-    // Resets all Stores
     // We're using 'setTimeout' in order to make this action asynchronous, because otherwise there would be an error where even after rerouting, the Logged In User's State data
     // for the Page before being rerouted will still be accessed, causing an error because that State data would be reset.
-    setTimeout(() => {
+    setTimeout(async () => {
       // Reset all Stores
       userStore.$reset();
       serviceStore.$reset();
+
+      // Navigates to the Login Page
+      // This needs to happen after the User Store is reset because otherwise the 'getLoggedInUser' function in the 'isLoggedOut' Middleware
+      // will return the User State even after they've been logged out since it hasn't been cleared yet.
+      await navigateTo("/login");
     }, 0);
   };
 

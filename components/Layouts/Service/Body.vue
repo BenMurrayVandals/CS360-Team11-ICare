@@ -10,6 +10,7 @@
           'colums-1': numCols === 1,
           'columns-2': numCols === 2,
           'columns-3': numCols === 3,
+          'columns-4': numCols === 4,
         }"
       >
         <!-- INPUTS -->
@@ -62,7 +63,14 @@
       <div
         v-else
         class="gap-x-6 pt-10 pb-3"
-        :class="[{ 'colums-1': numCols === 1, 'columns-2': numCols === 2, 'columns-3': numCols === 3 }]"
+        :class="[
+          {
+            'colums-1': numCols === 1,
+            'columns-2': numCols === 2,
+            'columns-3': numCols === 3,
+            'columns-4': numCols === 4,
+          },
+        ]"
       >
         <!-- ANSWERS -->
         <div v-for="[key, value] in Object.entries(inputs)" :key="value.id">

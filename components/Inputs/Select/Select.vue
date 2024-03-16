@@ -25,6 +25,7 @@ const props = defineProps<{
   size: Size;
   answer: Select;
   isUnselectable?: boolean;
+  showSelectedOption?: boolean;
 }>();
 
 const emits = defineEmits<{
@@ -72,7 +73,7 @@ const availableOptions = computed(() => {
 
   // If there is a selected option, filter out the Option from the 'options' Array whose text matches the selected option and return the new Array. Otherwise, just
   // return the 'options' Array if there isn't a selected option.
-  return props.answer.selected
+  return props.answer.selected && !props.showSelectedOption
     ? options.filter((option) => option.text.toLowerCase() !== props.answer.selected.toLowerCase())
     : options;
 });

@@ -5,7 +5,13 @@
       <!-- LEFT -->
       <div class="grow">
         <TransitionCustom name="fade" mode="out-in">
-          <InputsSelect v-if="isEdit" @changeSelected="changeSelected" size="medium" :answer="serviceTypeInput" />
+          <InputsSelect
+            v-if="isEdit"
+            @changeSelected="changeSelected"
+            size="medium"
+            :answer="serviceTypeInput"
+            showSelectedOption
+          />
           <GeneralTitle v-else size="very large" :text="service.type" color="white" class="py-[5.75px]" />
         </TransitionCustom>
       </div>
@@ -202,8 +208,10 @@ const serviceTypeOptions: { id: string; text: string }[] = [
 ];
 
 const availableServiceTypeOptions = computed(() =>
-  serviceTypeOptions.filter((curOption) =>
-    serviceStore.services.every((curService) => curService.type !== curOption.text)
+  serviceTypeOptions.filter(
+    (curOption) =>
+      serviceStore.services.every((curService) => curService.type !== curOption.text) ||
+      props.service.type === curOption.text
   )
 );
 
@@ -267,7 +275,7 @@ const serviceInputs = ref<ServiceInputs>({
       allowLessSpeed: {
         type: "toggle",
         id: "allowLessSpeed",
-        title: "Allow Lower Speeds",
+        title: "Allow Less Speed",
         required: false,
         selected: (props.service as CustomerInternet)?.allowLessSpeed ?? false,
         errors: [],
@@ -302,6 +310,182 @@ const serviceInputs = ref<ServiceInputs>({
           left: "$",
           right: "per month",
         },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Insurance: {
+      costPerMonth: {
+        type: "counter",
+        id: "costPerMonth",
+        title: "Cost per Month",
+        required: true,
+        selected: (props.service as CustomerInsurance)?.costPerMonth ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+      sqFootage: {
+        type: "counter",
+        id: "sqFootage",
+        title: "Square Footage",
+        required: true,
+        selected: (props.service as CustomerInsurance)?.sqFootage ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "ft sq",
+        },
+        errors: [],
+        warnings: [],
+      },
+      totalCoverage: {
+        type: "counter",
+        id: "totalCoverage",
+        title: "Total Coverage",
+        required: true,
+        selected: (props.service as CustomerInsurance)?.totalCoverage ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "",
+          right: "",
+        },
+        errors: [],
+        warnings: [],
+      },
+      allowLessCoverage: {
+        type: "toggle",
+        id: "allowLessCoverage",
+        title: "Allow Less Coverage",
+        required: false,
+        selected: (props.service as CustomerInsurance)?.allowLessCoverage ?? false,
+        errors: [],
+        warnings: [],
+      },
+    },
+    Morgage: {
+      sqFootage: {
+        type: "counter",
+        id: "sqFootage",
+        title: "Square Footage",
+        required: true,
+        selected: (props.service as CustomerMorgage)?.sqFootage ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "ft sq",
+        },
+        errors: [],
+        warnings: [],
+      },
+      costPerMonth: {
+        type: "counter",
+        id: "costPerMonth",
+        title: "Cost per Month",
+        required: true,
+        selected: (props.service as CustomerMorgage)?.costPerMonth ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+      insuranceRate: {
+        type: "counter",
+        id: "insuranceRate",
+        title: "Insurance Rate",
+        required: true,
+        selected: (props.service as CustomerMorgage)?.insuranceRate ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Interior: {
+      sqFootage: {
+        type: "counter",
+        id: "sqFootage",
+        title: "Square Footage",
+        required: true,
+        selected: (props.service as CustomerInterior)?.sqFootage ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "ft sq",
+        },
+        errors: [],
+        warnings: [],
+      },
+      costPerMonth: {
+        type: "counter",
+        id: "costPerMonth",
+        title: "Cost per Month",
+        required: true,
+        selected: (props.service as CustomerInterior)?.costPerMonth ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Cell: {
+      GBPerMonth: {
+        type: "counter",
+        id: "GBPerMonth",
+        title: "GB per Month",
+        required: true,
+        selected: (props.service as CustomerCell)?.GBPerMonth ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "GB per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+      costPerMonth: {
+        type: "counter",
+        id: "costPerMonth",
+        title: "Cost per Month",
+        required: true,
+        selected: (props.service as CustomerCell)?.costPerMonth ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+      allowLessGB: {
+        type: "toggle",
+        id: "allowLessGB",
+        title: "Allow Less GB",
+        required: false,
+        selected: (props.service as CustomerCell)?.allowLessGB ?? false,
         errors: [],
         warnings: [],
       },
@@ -352,6 +536,119 @@ const serviceInputs = ref<ServiceInputs>({
         text: {
           left: "$",
           right: "per sq foot",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Insurance: {
+      costPerSqFoot: {
+        type: "counter",
+        id: "costPerSqFoot",
+        title: "Cost per Square Foot",
+        required: true,
+        selected: (props.service as BusinessInsurance)?.costPerSqFoot ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per sq ft",
+        },
+        errors: [],
+        warnings: [],
+      },
+      totalCoverage: {
+        type: "counter",
+        id: "totalCoverage",
+        title: "Total Coverage",
+        required: true,
+        selected: (props.service as BusinessInsurance)?.totalCoverage ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "",
+          right: "",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Morgage: {
+      costPerSqFoot: {
+        type: "counter",
+        id: "costPerSqFoot",
+        title: "Cost per Square Foot",
+        required: true,
+        selected: (props.service as BusinessMorgage)?.costPerSqFoot ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per sq ft",
+        },
+        errors: [],
+        warnings: [],
+      },
+      insuranceRate: {
+        type: "counter",
+        id: "insuranceRate",
+        title: "Insurance Rate",
+        required: true,
+        selected: (props.service as BusinessMorgage)?.insuranceRate ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Interior: {
+      costPerSqFoot: {
+        type: "counter",
+        id: "costPerSqFoot",
+        title: "Cost per Square Foot",
+        required: true,
+        selected: (props.service as BusinessInterior)?.costPerSqFoot ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per sq ft",
+        },
+        errors: [],
+        warnings: [],
+      },
+    },
+    Cell: {
+      GBPerMonth: {
+        type: "counter",
+        id: "GBPerMonth",
+        title: "GB per Month",
+        required: true,
+        selected: (props.service as BusinessCell)?.GBPerMonth ?? 0,
+        min: 0,
+        max: 10000,
+        text: {
+          left: "",
+          right: "GB per month",
+        },
+        errors: [],
+        warnings: [],
+      },
+      costPerMonth: {
+        type: "counter",
+        id: "costPerMonth",
+        title: "Cost per Month",
+        required: true,
+        selected: (props.service as BusinessCell)?.costPerMonth ?? 0,
+        min: 0,
+        max: 1000,
+        text: {
+          left: "$",
+          right: "per month",
         },
         errors: [],
         warnings: [],

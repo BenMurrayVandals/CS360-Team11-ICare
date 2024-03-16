@@ -8,6 +8,6 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   // If there is no currently Logged In User, then the Route Path being routed to is prohibited
   if (!user) {
     // Prevents navigation to the Route Path being routed to.
-    return preventNavigation(to, from);
+    return preventNavigation(to, from, { navigateTo: "/signup" });
   }
 });

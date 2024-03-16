@@ -25,6 +25,10 @@ useSeoMeta({
   title: "Home",
 });
 
+definePageMeta({
+  middleware: "is-logged-in",
+});
+
 const serviceStore = useServiceStore();
 const userStore = useUserStore();
 

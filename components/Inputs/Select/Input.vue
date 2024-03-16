@@ -70,6 +70,7 @@
           :key="(option as FormOption).id ? (option as FormOption).id : (option as string)"
           :size="'large'"
           :data="(option as FormOption).text ? (option as FormOption).text : (option as string)"
+          :iconTypeRight="(option as FormOption).text === selected ? 'checkmark' : ''"
           isRounded
         />
         <!-- NO OPTIONS -->
