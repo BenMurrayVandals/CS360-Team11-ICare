@@ -202,17 +202,34 @@ model BusinessCell {
 
 //MISC Tables
 
-model Notification {
+model Matched {
     id                String   @id @default(uuid())
     customerId        String
     businessId        String
     serviceType       String
-    businessPrice     Float
-    sentAt            DateTime @default(now())
+    cserivceId        String
+    bserviceId        String
+    matchScore        Float
+    updatedAt         DateTime @default(now())
+    notfied           
     acceptStatus      Boolean
 
     customer      Customer @relation(fields: [customerId], references: [id])
     business      Business @relation(fields: [businessId], references: [id])
+}
+
+model Notification {
+    id                String   @id @default(uuid())
+    matchedId         String
+    customerId        String
+    businessId        String
+    customerAccept    Boolean
+    businessAccept    Boolean
+    sentAt            DateTime @default(now())
+
+    customer      Customer @relation(fields: [customerId], references: [id])
+    business      Business @relation(fields: [businessId], references: [id])
+    matched       Matched  @relation(fields: [matchedId],  references: [id])
 }
 
 model Blocked {
