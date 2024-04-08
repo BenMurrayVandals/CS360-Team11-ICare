@@ -32,6 +32,7 @@ model Customer {
     internet        CustomerInternet[]
     cell            CustomerCell[]
 
+    matched         Matched[]
     notification    Notification[]
     blocked         Blocked[] 
 }
@@ -55,6 +56,7 @@ model Business {
     internet        BusinessInternet[]
     cell            BusinessCell[]
 
+    matched         Matched[]
     notification    Notification[]
     blocked         Blocked[] 
 }
@@ -211,11 +213,14 @@ model Matched {
     bserviceId        String
     matchScore        Float
     updatedAt         DateTime @default(now())
-    notfied           
-    acceptStatus      Boolean
+    notified          Boolean  @default(false)
+    acceptStatus      Boolean  @default(false)
 
-    customer      Customer @relation(fields: [customerId], references: [id])
-    business      Business @relation(fields: [businessId], references: [id])
+    customer         Customer @relation(fields: [customerId], references: [id])
+    business         Business @relation(fields: [businessId], references: [id])
+
+    //Relationships
+    notification    Notification[]
 }
 
 model Notification {

@@ -178,15 +178,30 @@ declare global {
     | BusinessInternet
     | BusinessCell;
 
-  /* NOTIFICATION */
-  interface Notification {
+  /* MATCHED */
+  interface Matched {
     id: string;
     customerId: string;
     businessId: string;
     serviceType: string;
-    businessPrice: string;
-    sentAt: Date;
+    cserivceId: string;
+    bserviceId: string;
+    matchScore: number;
+    updatedAt: Date;
+    notified: boolean;
     acceptStatus: boolean;
+
+  }
+
+  /* NOTIFICATION */
+  interface Notification {
+    id: string;
+    matchedId: string;
+    customerId: string;
+    businessId: string;
+    customerAccept: boolean;
+    businessAccept: boolean;
+    sentAt: Date;
   }
 
   /* BLOCKED */
