@@ -1,20 +1,58 @@
 import prisma from '~~/server/database/client';
+import { getLoggedInUser } from "~~/server/services/authService";
 
 export default defineEventHandler(async (event) => {
     try {
-      // Parse the request body
+      //Fetch current user
+      const user = await getLoggedInUser(event);
+
+      //If no one's logged in, or user isn't a customer
+      if(!user || user?.userType != "customer")
+      {
+        throw createError({ statusCode: 401, message: 'Unauthorized: User of wrong type (Customer Cell)' });
+      }
+
+      //Get user id
+      const customerId = user.id; 
+
+      // Parse the id from event
       const { id } = await readBody(event);
-      //Delete service based off ID
-      const deletedCellService = await prisma.customerCell.delete({
+
+      // Validate request body fields
+      if (!id) {
+        throw createError({ statusCode: 400, message: 'Bad Request: Missing required fields' });
+      }
+
+      //fetches Cell service based off ID
+      const existingCellService = await prisma.customerCell.findUnique({
         where: {
             id: id,
         },
       });
-      return {
-        statusCode: 200,
-        body: JSON.stringify(deletedCellService),
-    };
+
+      // Check if the Cell service with the provided ID exists
+      if (!existingCellService) {
+          throw createError({ statusCode: 404, message: 'Cell service not found' });
+      }
+      
+      // Check if the customerId matches the customerId associated with the Cell service
+      if (existingCellService.customerId !== customerId) {
+          throw createError({ statusCode: 403, message: 'Forbidden: Incorrect customerId' });
+      }
+      
+      // Delete the Cell service based on ID and customer ID
+      const deletedCellService = await prisma.customerCell.delete({
+          where: {
+              id: id,
+          },
+      });
+      return deletedCellService;
     } catch (error) {
-        throw createError({ statusCode: 500, message: 'Error deleting Cell service' });
+       if (error.code === 'P2002') {
+            // Prisma constraint violation error
+            throw createError({ statusCode: 400, message: 'Bad Request: Duplicate entry' });
+        } else {
+            throw createError({ statusCode: 500, message: 'Error deleting Cell service' });
+        }
     }
 });

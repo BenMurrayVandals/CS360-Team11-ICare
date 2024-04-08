@@ -33,9 +33,18 @@ export default defineEventHandler(async (event) => {
             break;
           default: //Morgage case
           try {
+            const {sqFootage, costPerMonth, insuranceRate} = await readBody(event);
+            //Validate request body fields
+            if(!sqFootage || !costPerMonth || !insuranceRate){
+              throw createError({ statusCode: 400, message: 'Bad Request: Missing required fields' });
+            }
             const updatedMorgageService = await prisma.customerMorgage.update({
                 where: { id }, // Specify the record by its unique id
-                data: await readBody(event), // Provide the new data to update
+                data: {// Provide the new data to update
+                  sqFootage,
+                  costPerMonth,
+                  insuranceRate
+                } 
             });
             return updatedMorgageService;
           } catch (error) {
@@ -46,6 +55,11 @@ export default defineEventHandler(async (event) => {
         }
     
       } catch (error) {
-        throw createError({ statusCode: 500, message: 'Error editting morgage service' });
+        if (error.code === 'P2002') {
+          // Prisma constraint violation error
+          throw createError({ statusCode: 400, message: 'Bad Request: Duplicate entry' });
+      } else {
+          throw createError({ statusCode: 500, message: 'Error editting morgage service' });
+      }
       }
   });
