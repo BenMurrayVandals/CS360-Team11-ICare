@@ -9,8 +9,8 @@ import addCell from '../cellServices/addCellService.post';
 export default defineEventHandler(async (event) => {
     try {
         // Parse the request body
-        const { id, type } = await readBody(event);
-        switch(type){
+        const { id, serviceType } = await readBody(event);
+        switch(serviceType){
           case "Lawn":
             await deleteMorgage(event);
             return (await addLawn(event));

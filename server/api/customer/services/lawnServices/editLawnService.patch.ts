@@ -1,6 +1,6 @@
 import prisma from '~~/server/database/client';
-import deleteMorgage from './deleteMorgageService.delete';
-import addLawn from '../lawnServices/addLawnService.post';
+import deleteLawn from './deleteLawnService.delete';
+import addMorgage from '../morgageServices/addMorgageService.post';
 import addInterior from '../interiorServices/addInteriorService.post';
 import addInsurance from '../insuranceServices/addInsuranceService.post';
 import addInternet from '../internetServices/addInternetService.post';
@@ -11,45 +11,45 @@ export default defineEventHandler(async (event) => {
         // Parse the request body
         const { id, serviceType } = await readBody(event);
         switch(serviceType){
-          case "Lawn":
-            await deleteMorgage(event);
-            return (await addLawn(event));
+          case "Morgage":
+            await deleteLawn(event);
+            return (await addMorgage(event));
             break;
           case "Interior":
-            await deleteMorgage(event);
+            await deleteLawn(event);
             return (await addInterior(event));
             break;
           case "Insurance":
-            await deleteMorgage(event);
+            await deleteLawn(event);
             return (await addInsurance(event));
             break;
           case "Internet":
-            await deleteMorgage(event);
+            await deleteLawn(event);
             return (await addInternet(event));
             break;
           case "Cell":
-            await deleteMorgage(event);
+            await deleteLawn(event);
             return (await addCell(event));
             break;
-          default: //Morgage case
+          default: //Lawn case
           try {
-            const { costPerSqFoot, insuranceRate } = await readBody(event);
+            const { lawnSize, costPerMonth } = await readBody(event);
             //Make sure we have all important data
-            if (!costPerSqFoot || !insuranceRate) {
+            if (!lawnSize || !costPerMonth) {
               throw createError({ statusCode: 400, message: 'Bad Request: Missing required fields' });
             }
-            const updatedMorgageService = await prisma.businessMorgage.update({
+            const updatedLawnService = await prisma.customerLawn.update({
                 where: { id }, // Specify the record by its unique id
                 data: {// Provide the new data to update
-                  costPerSqFoot,
-                  insuranceRate
+                  lawnSize,
+                  costPerMonth
                 } 
             });
-            return updatedMorgageService;
+            return updatedLawnService;
           } catch (error) {
               // Handle errors
               console.log(error);
-              throw createError({ statusCode: 500, message: 'Error editting morgage service' });
+              throw createError({ statusCode: 500, message: 'Error editting Lawn service' });
           }
           break;
         }
@@ -60,7 +60,7 @@ export default defineEventHandler(async (event) => {
           throw createError({ statusCode: 400, message: 'Bad Request: Duplicate entry' });
       } else {
         console.log(error);
-          throw createError({ statusCode: 500, message: 'Error editting morgage service' });
+          throw createError({ statusCode: 500, message: 'Error editting Lawn service' });
       }
       }
   });

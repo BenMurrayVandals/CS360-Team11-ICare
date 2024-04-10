@@ -5,6 +5,7 @@ export default defineEventHandler(async (event) => {
     try {
         //Get the current Logged in user
         const user = await getLoggedInUser(event);
+        console.log(user);
         //Make sure user is a business
         if(user?.userType != "business")
         {
@@ -36,6 +37,7 @@ export default defineEventHandler(async (event) => {
           throw createError({ statusCode: 400, message: 'Bad Request: Duplicate entry' });
       } else {
           // Generic error response
+          console.log(error);
           throw createError({ statusCode: 500, message: 'Internal Server Error' });
       }
   }
