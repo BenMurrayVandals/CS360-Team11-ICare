@@ -48,7 +48,7 @@ declare global {
 
   interface ICustomer {
     id: string;
-    userType: string;
+    userType: UserType;
     username: string;
     email: string;
     emailNormalized: string;
@@ -64,7 +64,7 @@ declare global {
 
   interface IBusiness {
     id: string;
-    userType: string;
+    userType: UserType;
     businessName: string;
     email: string;
     emailNormalized: string;
@@ -177,6 +177,14 @@ declare global {
     | BusinessInsurance
     | BusinessInternet
     | BusinessCell;
+
+  interface Profile extends ServiceBase {
+    matchPreference?: MatchPreference;
+    phoneNumber: string;
+    email: string;
+  }
+
+  type MatchPreference = "Any" | "Good" | "Best" | "None"
 
   /* MATCHED */
   interface Matched {

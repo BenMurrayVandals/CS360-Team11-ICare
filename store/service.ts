@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import { useUserStore } from "~~/store/user";
 
 export const useServiceStore = defineStore("service", () => {
+  const { matchPreferenceNumToStr } = useForm();
+
   const userStore = useUserStore();
 
   const services = ref<Service[]>([
@@ -14,6 +16,17 @@ export const useServiceStore = defineStore("service", () => {
       allowLessSpeed: true,
     },
   ]);
+
+  const profile = computed<Profile>(() => ({
+    id: "profile",
+    type: "Profile",
+    matchPreference: userStore.isCustomer
+      ? matchPreferenceNumToStr((userStore.user as ICustomer)?.matchPreference) ?? "Good"
+      : "None",
+    phoneNumber: userStore.user?.phoneNumber ?? "(808)-278-7627",
+    email: userStore.user?.email,
+  }));
+
   /* RESET USER STATE */
   // Resets the User State
   const $reset = () => {
@@ -22,6 +35,7 @@ export const useServiceStore = defineStore("service", () => {
 
   return {
     services,
+    profile,
     $reset,
   };
 });

@@ -9,6 +9,43 @@ export const useForm = () => {
     // console.log(answer.input);
   };
 
+  /* PHONE NUMBER */
+  // Converts a phone number in the input selection format into a string.
+  const phoneNumberSelectedToStr = ({ areaCode, prefix, lineNumber }: PhoneNumberSelected) =>
+    `(${areaCode})-${prefix}-${lineNumber}`;
+
+  // Converts a phone number in string format into phone number input selection format.
+  const phoneNumberStrToSelected = (phoneNum: string): PhoneNumberSelected => ({
+    areaCode: +phoneNum?.slice(1, 4),
+    prefix: +phoneNum?.slice(6, 9),
+    lineNumber: +phoneNum?.slice(10, phoneNum?.length),
+  });
+
+  /* MATCH PREFERENCE */
+  const matchPreferenceStrToNum = (matchPreference: MatchPreference) => {
+    switch (matchPreference) {
+      case 'Any':
+        return 25
+      case 'Good':
+        return 50
+      case 'Best':
+        return 75
+      default: return 0
+    }
+  }
+
+  const matchPreferenceNumToStr = (matchPreference: number): MatchPreference => {
+    switch (matchPreference) {
+      case 25:
+        return "Any"
+      case 50:
+        return "Good"
+      case 75:
+        return "Best"
+      default: return "None"
+    }
+  }
+
   /* ALERTS */
   // Adds the passed 'alert' to the passed 'key' in the passed 'alerts' Generic Object, and then returns the new Generic Alerts Object.
   const addFormAlert = <T extends Object>(alerts: T, key: string, alert: Alert): T => {
@@ -29,5 +66,14 @@ export const useForm = () => {
   const getNumFormAlerts = (alerts: FormErrors | FormWarnings) =>
     Object.values(alerts).reduce((acc, cur) => acc + cur.length, 0);
 
-  return { changeSelected, updateInput, addFormAlert, getNumFormAlerts };
+  return {
+    changeSelected,
+    updateInput,
+    phoneNumberSelectedToStr,
+    phoneNumberStrToSelected,
+    matchPreferenceStrToNum,
+    matchPreferenceNumToStr,
+    addFormAlert,
+    getNumFormAlerts,
+  };
 };

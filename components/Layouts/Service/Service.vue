@@ -66,7 +66,9 @@
         @changeSelected="changeSelected"
         :serviceRead="service"
         :serviceType="isEdit ? serviceTypeInput.selected : service.type"
-        :inputs="serviceInputs[userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.type] ?? null"
+        :serviceInputs="
+          serviceInputs[userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.type] ?? null
+        "
         :isEdit="isEdit"
       />
     </main>
@@ -77,7 +79,8 @@
 import { useServiceStore } from "~~/store/service";
 import { useUserStore } from "~~/store/user";
 
-const { changeSelected } = useForm();
+const { questionsBoilerplate } = getFormInfo();
+const { changeSelected, phoneNumberStrToSelected } = useForm();
 const { generateID, deepCopy } = useUtilities();
 
 const props = defineProps<{

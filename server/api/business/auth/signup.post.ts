@@ -189,14 +189,14 @@ export default defineEventHandler(async (event: H3Event): Promise<{ business: IB
   let business: IBusiness;
   try {
     // Creates the new Business.
-    business = await prisma.business.create({
+    business = (await prisma.business.create({
         data: {
             businessName,
             email,
             emailNormalized: v.normalizeEmail(email) || email,
             password: encryptedPassword,
         }
-    })
+    }) as IBusiness)
   } catch (error) {
     // Return the error(s) so that they can be handled.
     return { business: null, errors };

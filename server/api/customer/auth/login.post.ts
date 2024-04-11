@@ -33,11 +33,11 @@ export default defineEventHandler(async (event: H3Event): Promise<{ customer: IC
   if (!isObjectEmpty(errors)) return { customer: null, errors };
 
   // Find the Customer in the DB whose 'emailNormalized' field is equal to the provided email after being normalized.
-  const customer: ICustomer = await prisma.customer.findUnique({
+  const customer: ICustomer = (await prisma.customer.findUnique({
     where: {
         emailNormalized: v.normalizeEmail(email) || email
     }
-  })
+  }) as ICustomer)
 
   // If no Customer matching the provided normalized email is found, or if a matching Customer is found but the provided password isn't equal to the
   // matching Customer's password - Client

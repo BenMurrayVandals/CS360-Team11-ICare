@@ -2,62 +2,63 @@
   <div>
     <!-- EDIT & READ -->
     <TransitionCustom name="fade" mode="out-in">
-      <div
-        v-if="isEdit"
-        class="gap-x-6 pt-10"
-        :class="{
-          'pb-1': !hasToggle,
-          'colums-1': numCols === 1,
-          'columns-2': numCols === 2,
-          'columns-3': numCols === 3,
-          'columns-4': numCols === 4,
-        }"
-      >
-        <!-- INPUTS -->
-        <div v-for="[key, value] in Object.entries(inputs)" :key="value.id">
-          <!-- COUNTER -->
-          <div v-if="value.type === 'counter'" class="flex items-center gap-x-4">
-            <InputsCounter
+      <div v-if="isEdit" class="gap-x-6 pt-10">
+        <div
+          :class="{
+            'pb-1': !hasToggle,
+            'colums-1': numCols === 1,
+            'columns-2': numCols === 2,
+            'columns-3': numCols === 3,
+            'columns-4': numCols === 4,
+          }"
+        >
+          <!-- INPUTS -->
+          <div v-for="[key, value] in Object.entries(serviceInputs)" :key="value.id">
+            <!-- COUNTER -->
+            <div v-if="value.type === 'counter'" class="flex items-center gap-x-4">
+              <InputsCounter
+                @changeSelected="$emit('changeSelected', $event)"
+                size="medium"
+                :answer="(value as Counter)"
+              />
+              <!-- INTERNET SPEED BUTTON -->
+              <NuxtLink
+                v-if="serviceType === 'Internet' && key === 'speed'"
+                to="https://www.speedtest.net/"
+                target="_blank"
+              >
+                <IconWithTooltip
+                  size="large"
+                  iconType="search"
+                  color="white"
+                  tooltipText="Find your internet speed"
+                  isAccent
+                />
+              </NuxtLink>
+              <!-- LAWN SIZE BUTTON -->
+              <NuxtLink
+                v-if="serviceType === 'Lawn' && key === 'lawnSize'"
+                to="https://www.measuremylawn.com/"
+                target="_blank"
+              >
+                <IconWithTooltip
+                  size="large"
+                  iconType="search"
+                  color="white"
+                  tooltipText="Find your lawn size"
+                  isAccent
+                />
+              </NuxtLink>
+            </div>
+            <!-- TOGGLE -->
+            <InputsToggle
+              v-else-if="value.type === 'toggle'"
               @changeSelected="$emit('changeSelected', $event)"
               size="medium"
-              :answer="(value as Counter)"
+              :answer="(value as ToggleInput)"
             />
-            <!-- INTERNET SPEED BUTTON -->
-            <NuxtLink
-              v-if="serviceType === 'Internet' && key === 'speed'"
-              to="https://www.speedtest.net/"
-              target="_blank"
-            >
-              <IconWithTooltip
-                size="large"
-                iconType="search"
-                color="white"
-                tooltipText="Find your internet speed"
-                isAccent
-              />
-            </NuxtLink>
-            <!-- LAWN SIZE BUTTON -->
-            <NuxtLink
-              v-if="serviceType === 'Lawn' && key === 'lawnSize'"
-              to="https://www.measuremylawn.com/"
-              target="_blank"
-            >
-              <IconWithTooltip
-                size="large"
-                iconType="search"
-                color="white"
-                tooltipText="Find your lawn size"
-                isAccent
-              />
-            </NuxtLink>
+            
           </div>
-          <!-- TOGGLE -->
-          <InputsToggle
-            v-else-if="value.type === 'toggle'"
-            @changeSelected="$emit('changeSelected', $event)"
-            size="medium"
-            :answer="(value as ToggleInput)"
-          />
         </div>
       </div>
       <div
@@ -73,7 +74,7 @@
         ]"
       >
         <!-- ANSWERS -->
-        <div v-for="[key, value] in Object.entries(inputs)" :key="value.id">
+        <div v-for="[key, value] in Object.entries(serviceInputs)" :key="value.id">
           <!-- COUNTERS -->
           <AnswersNormal
             v-if="value.type === 'counter'"
@@ -100,7 +101,7 @@ const { capitalize } = useUtilities();
 const props = defineProps<{
   serviceRead: Service | null;
   serviceType: string;
-  inputs: Record<string, FormInput>;
+  serviceInputs: Record<string, FormInput>;
   isEdit?: boolean;
 }>();
 
@@ -109,9 +110,9 @@ defineEmits<{
 }>();
 
 // Computes num of columns to seperate the inputs/answers into
-const numCols = computed(() => Object.keys(props.inputs)?.length);
+const numCols = computed(() => Object.keys(props.serviceInputs)?.length);
 
 // Computes whether this Component's inputs contain a toggle input, because the toggle has a different height than the other inputs
 // so the height of the Component should be a little different.
-const hasToggle = computed(() => Object.values(props.inputs).some((curInput) => curInput.type === "toggle"));
+const hasToggle = computed(() => Object.values(props.serviceInputs).some((curInput) => curInput.type === "toggle"));
 </script>
