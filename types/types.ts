@@ -83,7 +83,7 @@ declare global {
     id: string;
     // Key is client only, not stored in DB
     key?: string;
-    type: string;
+    serviceType: string;
   }
 
   /* CUSTOMER SERVICES */

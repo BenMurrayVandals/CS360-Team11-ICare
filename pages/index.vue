@@ -32,7 +32,7 @@ useSeoMeta({
 });
 
 definePageMeta({
-  middleware: "is-logged-in",
+  middleware: ["is-logged-in", "get-all-services"],
 });
 
 const serviceStore = useServiceStore();
@@ -41,11 +41,13 @@ const userStore = useUserStore();
 const addService = () => {
   const id = generateID();
 
+  if(!serviceStore.services) serviceStore.services = []
+
   serviceStore.services?.push({
     id,
     [`${userStore.isCustomer ? "customer" : "business"}Id`]: userStore.user?.id,
     key: `new-${id}`,
-    type: null,
+    serviceType: null,
   });
 };
 </script>

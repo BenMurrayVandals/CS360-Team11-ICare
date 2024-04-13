@@ -12,7 +12,7 @@
             :answer="serviceTypeInput"
             showSelectedOption
           />
-          <GeneralTitle v-else size="very large" :text="service.type" color="white" class="py-[5.75px]" />
+          <GeneralTitle v-else size="very large" :text="service.serviceType" color="white" class="py-[5.75px]" />
         </TransitionCustom>
       </div>
       <!-- RIGHT -->
@@ -62,12 +62,12 @@
     </header>
     <main>
       <LayoutsServiceBody
-        v-if="isEdit ? serviceTypeInput.selected : service.type"
+        v-if="isEdit ? serviceTypeInput.selected : service.serviceType"
         @changeSelected="changeSelected"
         :serviceRead="service"
-        :serviceType="isEdit ? serviceTypeInput.selected : service.type"
+        :serviceType="isEdit ? serviceTypeInput.selected : service.serviceType"
         :serviceInputs="
-          serviceInputs[userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.type] ?? null
+          serviceInputs[userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.serviceType] ?? null
         "
         :isEdit="isEdit"
       />
@@ -91,7 +91,7 @@ const serviceStore = useServiceStore();
 const userStore = useUserStore();
 
 /* EDIT MODE */
-const isEdit = ref(props.service?.type ? false : true);
+const isEdit = ref(props.service?.serviceType ? false : true);
 
 const toggleIsEdit = () => {
   isEdit.value = !isEdit.value;
@@ -99,30 +99,17 @@ const toggleIsEdit = () => {
 
 /* ACTIONS */
 const confirmChanges = async () => {
-  // let service: Service;
-  let service = {
-    id: !props.service?.type ? generateID() : props.service?.id,
-    [`${userStore.isCustomer ? "customer" : "business"}Id`]: userStore.user?.id,
-    type: serviceTypeInput.value?.selected,
-    ...Object.fromEntries(
-      Object.entries(serviceInputs.value[userStore.user?.userType][serviceTypeInput.value?.selected]).map(
-        ([key, value]) => [key, (value as Counter | ToggleInput)?.selected]
-      )
-    ),
-  };
+  let service: Service;
 
-  console.log(service);
-
-  /*
   // Adding new service
-  if (!props.service?.type && serviceTypeInput.value.selected) {
-    const { data, error } = await useFetch<{ service: Service }>(
-      `/api/${userStore.user?.userType}/service/${serviceTypeInput.value.selected.toLowerCase()}/addService`,
+  if (!props.service?.serviceType && serviceTypeInput.value.selected) {
+    service = await $fetch<Service>(
+      `/api/${userStore.user?.userType}/services/${serviceTypeInput.value.selected.toLowerCase()}Services/add${
+        serviceTypeInput.value.selected
+      }Service`,
       {
         method: "POST",
         body: deepCopy({
-          [`${userStore.isCustomer ? "customer" : "business"}Id`]: userStore.user?.id,
-          type: serviceTypeInput.value?.selected,
           ...Object.fromEntries(
             Object.entries(serviceInputs.value[userStore.user?.userType][serviceTypeInput.value?.selected]).map(
               ([key, value]) => [key, (value as Counter | ToggleInput)?.selected]
@@ -132,23 +119,21 @@ const confirmChanges = async () => {
       }
     );
 
-    service = data.value?.service;
+    console.log(service);
 
-    if (!service || error.value) {
-      console.error(error.value);
-      return;
-    }
+    if (!service) return;
   }
   // Editing existing service
-  else if (props.service.type && serviceTypeInput.value.selected) {
-    const { data, error } = await useFetch<{ service: Service }>(
-      `/api/${userStore.user?.userType}/service/${serviceTypeInput.value.selected.toLowerCase()}/editService`,
+  else if (props.service.serviceType && serviceTypeInput.value.selected) {
+    service = await $fetch<Service>(
+      `/api/${userStore.user?.userType}/services/${props.service.serviceType.toLowerCase()}Services/edit${
+        props.service.serviceType
+      }Service`,
       {
         method: "PATCH",
         body: deepCopy({
           id: props.service?.id,
-          [`${userStore.isCustomer ? "customer" : "business"}Id`]: userStore.user?.id,
-          type: serviceTypeInput.value?.selected,
+          serviceType: serviceTypeInput.value.selected,
           ...Object.fromEntries(
             Object.entries(serviceInputs.value[userStore.user?.userType][serviceTypeInput.value?.selected]).map(
               ([key, value]) => [key, (value as Counter | ToggleInput)?.selected]
@@ -158,26 +143,18 @@ const confirmChanges = async () => {
       }
     );
 
-    service = data.value?.service;
+    console.log(service);
 
-    if (!service || error.value) {
-      console.error(error.value);
-      return;
-    }
+    if (!service) return;
   } else return;
-  */
 
   const index = serviceStore.services?.findIndex((curService) => curService?.id === props.service?.id);
   const key = props.service?.key ?? null;
 
   if (index !== -1) {
     serviceStore.services[index] = {
-      ...{
-        // id: !props.service?.type ? generateID() : props.service?.id,
-        // type: serviceTypeInput.value?.selected,
-        ...service,
-      },
-      ...{ key },
+      ...service,
+      key,
     };
   }
 
@@ -187,13 +164,29 @@ const confirmChanges = async () => {
 const cancelChanges = () => {
   const index = serviceStore.services?.findIndex((curService) => curService?.id === props.service?.id);
 
-  if (index !== -1 && !props.service?.type) serviceStore.services.splice(index, 1);
+  if (index !== -1 && !props.service?.serviceType) serviceStore.services.splice(index, 1);
 
   toggleIsEdit();
 };
 
-const deleteService = () => {
-  const index = serviceStore.services?.findIndex((curService) => curService?.id === props.service?.id);
+const deleteService = async () => {
+  const deletedService = await $fetch<Service>(
+    `/api/${userStore.user?.userType}/services/${props.service.serviceType?.toLowerCase()}Services/delete${
+      props.service.serviceType
+    }Service`,
+    {
+      method: "DELETE",
+      body: deepCopy({
+        id: props.service.id,
+      }),
+    }
+  );
+
+  console.log(deletedService);
+
+  if (!deletedService) return;
+
+  const index = serviceStore.services?.findIndex((curService) => curService?.id === deletedService?.id);
 
   if (index !== -1) serviceStore.services.splice(index, 1);
 };
@@ -213,8 +206,8 @@ const serviceTypeOptions: { id: string; text: string }[] = [
 const availableServiceTypeOptions = computed(() =>
   serviceTypeOptions.filter(
     (curOption) =>
-      serviceStore.services.every((curService) => curService.type !== curOption.text) ||
-      props.service.type === curOption.text
+      serviceStore.services.every((curService) => curService.serviceType !== curOption.text) ||
+      props.service.serviceType === curOption.text
   )
 );
 
@@ -223,7 +216,7 @@ const serviceTypeInput = ref<Select>({
   id: "serviceType",
   title: "Service Type",
   required: true,
-  selected: props.service?.type ?? "",
+  selected: props.service?.serviceType ?? "",
   placeholder: "Select a service type",
   options: availableServiceTypeOptions.value,
   errors: [],
