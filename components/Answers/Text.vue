@@ -7,6 +7,7 @@
           'text-xs': size === 'very small',
           'text-sm': size === 'small',
           'text-base': size === 'medium',
+          'text-lg': size === 'large',
           truncate: !noTruncate,
         }"
         class="text-white"

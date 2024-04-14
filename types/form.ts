@@ -50,9 +50,23 @@ declare global {
     selected: boolean;
   }
 
+  interface PhoneNumberSelected {
+    areaCode: number;
+    prefix: number;
+    lineNumber: number;
+  }
+
+  interface PhoneNumberInput extends Form {
+    selected: PhoneNumberSelected;
+  }
+
+  interface MatchPreferenceInput extends Form {
+    selected: string
+  }
+
   type PasswordAutocomplete = "new" | "current";
 
-  type FormInput = TextInput | Counter | Select | ToggleInput;
+  type FormInput = TextInput | Counter | Select | ToggleInput | PhoneNumberInput | MatchPreferenceInput;
   // #endregion
 
   /* PAGE QUESTIONS */

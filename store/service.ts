@@ -2,18 +2,40 @@ import { defineStore } from "pinia";
 import { useUserStore } from "~~/store/user";
 
 export const useServiceStore = defineStore("service", () => {
+  const { matchPreferenceNumToStr } = useForm();
+
   const userStore = useUserStore();
 
-  const services = ref<Service[]>([
-    {
-      id: "internet",
-      customerId: "682d8f2a-52b5-4f96-950c-0ca130f11bc4",
-      type: "Internet",
-      costPerMonth: 20,
-      speed: 57,
-      allowLessSpeed: true,
-    },
-  ]);
+  const services = ref<Service[]>(null);
+
+  const getAllServices = async (): Promise<Service[] | undefined> => {
+    if (!services.value) {
+      try {
+        const allServices = await $fetch<Service[]>(`/api/${userStore.user?.userType}/services/getAllServices`, {
+          headers: useRequestHeaders(["cookie"]),
+        });
+
+        if (allServices) {
+          services.value = allServices;
+        }
+      } catch (err) {
+        console.log("ERROR: ", err);
+      }
+    }
+
+    return services.value;
+  }
+
+  const profile = computed<Profile>(() => ({
+    id: "profile",
+    serviceType: "Profile",
+    matchPreference: userStore.isCustomer
+      ? matchPreferenceNumToStr((userStore.user as ICustomer)?.matchPreference) ?? "Good"
+      : "None",
+    phoneNumber: userStore.user?.phoneNumber ?? "",
+    email: userStore.user?.email,
+  }));
+
   /* RESET USER STATE */
   // Resets the User State
   const $reset = () => {
@@ -22,6 +44,8 @@ export const useServiceStore = defineStore("service", () => {
 
   return {
     services,
+    getAllServices,
+    profile,
     $reset,
   };
 });
