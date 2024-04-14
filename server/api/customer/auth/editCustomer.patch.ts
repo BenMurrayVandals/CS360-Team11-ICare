@@ -1,5 +1,6 @@
 import prisma from '~~/server/database/client';
 import { getLoggedInUser } from "~~/server/services/authService";
+import v from "validator";
 
 export default defineEventHandler(async (event) => {
     try {
@@ -13,23 +14,26 @@ export default defineEventHandler(async (event) => {
         //Get user id
         const customerId = user.id; 
         //fetch exisiting customer
-        const existingCustomer = await prisma.customer.findUnique({
+        const customer = await prisma.customer.findUnique({
           where: {
               id: customerId,
           },
         });
-        if (!existingCustomer) {
+        if (!customer) {
             throw new Error('Customer not found');
         }
         const {email, phoneNumber, address, matchPreference} = await readBody(event);
-
+        const updatedEmail = email || customer.email;
+        const updatedPhone = phoneNumber || customer.phoneNumber;
+        const updatedAddress = address || customer.address;
+        const updatedMatchP = matchPreference || customer.matchPreference;
+        const normEmail = v.normalizeEmail(updatedEmail);
         const updatedData = {
-          ...existingCustomer,
-          ...event,
-          email,
-          address,
-          phoneNumber,
-          matchPreference,
+          email: updatedEmail,
+          emailNormalized: normEmail,
+          address: updatedAddress,
+          phoneNumber: updatedPhone,
+          matchPreference: updatedMatchP,
         };
         // Remove undefined properties
         Object.keys(updatedData).forEach(key => updatedData[key] === undefined && delete updatedData[key]);
@@ -44,7 +48,8 @@ export default defineEventHandler(async (event) => {
           // Prisma constraint violation error
           throw createError({ statusCode: 400, message: 'Bad Request: Duplicate entry' });
       } else {
-          throw createError({ statusCode: 500, message: 'Error editting morgage service' });
+          console.log(error);
+          throw createError({ statusCode: 500, message: 'Error editting customer' });
       }
       }
   });

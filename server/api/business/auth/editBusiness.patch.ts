@@ -1,5 +1,6 @@
 import prisma from '~~/server/database/client';
 import { getLoggedInUser } from "~~/server/services/authService";
+import v from "validator";
 
 export default defineEventHandler(async (event) => {
     try {
@@ -13,22 +14,24 @@ export default defineEventHandler(async (event) => {
         //Get user id
         const businessId = user.id; 
         //fetch exisiting business
-        const existingBusiness = await prisma.business.findUnique({
+        const business = await prisma.business.findUnique({
           where: {
               id: businessId,
           },
         });
-        if (!existingBusiness) {
+        if (!business) {
             throw new Error('business not found');
         }
         const {businessName, email, phoneNumber} = await readBody(event);
-
+        const updatedName = businessName || business.businessName;
+        const updatedEmail = email || business.email;
+        const updatedPhone = phoneNumber || business.phoneNumber;
+        const normEmail = v.normalizeEmail(updatedEmail);
         const updatedData = {
-          ...existingBusiness,
-          ...event,
-          businessName,
-          email,
-          phoneNumber,
+          businessName: updatedName,
+          email: updatedEmail,
+          emailNormalized: normEmail,
+          phoneNumber: updatedPhone,
         };
         
         // Remove undefined properties
