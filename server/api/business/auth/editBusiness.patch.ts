@@ -30,7 +30,7 @@ export default defineEventHandler(async (event) => {
         const updatedData = {
           businessName: updatedName,
           email: updatedEmail,
-          emailNormalized: normEmail,
+          emailNormalized: normEmail || updatedEmail,
           phoneNumber: updatedPhone,
         };
         

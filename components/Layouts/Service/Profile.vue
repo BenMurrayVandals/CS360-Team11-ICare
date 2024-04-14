@@ -103,7 +103,7 @@ import { useUserStore } from "~~/store/user";
 const { questionsBoilerplate } = getFormInfo();
 const { updateInput, changeSelected, matchPreferenceStrToNum, phoneNumberStrToSelected, phoneNumberSelectedToStr } =
   useForm();
-const { generateID, deepCopy } = useUtilities();
+const { generateID, deepCopy, capitalize } = useUtilities();
 
 const props = defineProps<{
   profile: Profile;
@@ -112,7 +112,7 @@ const props = defineProps<{
 const userStore = useUserStore();
 
 /* EDIT MODE */
-const isEdit = ref(true);
+const isEdit = ref(!props.profile?.email || !props.profile?.phoneNumber || props.profile?.matchPreference === null);
 
 const toggleIsEdit = () => {
   isEdit.value = !isEdit.value;
@@ -120,41 +120,36 @@ const toggleIsEdit = () => {
 
 /* ACTIONS */
 const confirmChanges = async () => {
-  const profileInfo = {
-    ...Object.fromEntries(
-      Object.entries(profileInputs.value[userStore.user?.userType]).map(([key, value]) => [
-        key,
-        (value as MatchPreferenceInput | PhoneNumberInput)?.selected ?? (value as TextInput)?.input,
-      ])
-    ),
-  } as { email: string; matchPreference: MatchPreference; phoneNumber: PhoneNumberSelected };
+  const profileInfo = userStore.isCustomer
+    ? {
+        email: (profileInputs.value.customer?.email as TextInput)?.input,
+        phoneNumber: phoneNumberSelectedToStr(
+          (profileInputs.value.customer?.phoneNumber as PhoneNumberInput)?.selected
+        ),
+        matchPreference: matchPreferenceStrToNum(
+          (profileInputs.value.customer?.matchPreference as MatchPreferenceInput)?.selected as MatchPreference
+        ),
+      }
+    : {
+        email: (profileInputs.value.business?.email as TextInput)?.input,
+        phoneNumber: phoneNumberSelectedToStr(
+          (profileInputs.value.business?.phoneNumber as PhoneNumberInput)?.selected
+        ),
+      };
 
-  console.log(profileInfo);
+  const updatedUser = await $fetch<IUser>(
+    `/api/${userStore.user?.userType}/auth/edit${capitalize(userStore.user?.userType)}`,
+    {
+      method: "PATCH",
+      body: deepCopy(profileInfo),
+    }
+  );
 
-  /* 
-  const { data, error } = await useFetch<{ updatedUser: IUser }>(`/api/${userStore.user?.userType}/editProfile`, {
-    method: "PATCH",
-    body: deepCopy({
-      profileInfo,
-    }),
-  });
+  if (!updatedUser) return;
 
-  const updatedUser = data.value?.updatedUser;
+  userStore.user = updatedUser;
 
-  if (!updatedUser || error.value) {
-    console.error(error.value);
-    return;
-  }
-
-  userStore.user = updatedUser
-  */
-
-  userStore.user = {
-    ...userStore.user,
-    email: profileInfo?.email,
-    phoneNumber: phoneNumberSelectedToStr(profileInfo.phoneNumber),
-    matchPreference: matchPreferenceStrToNum(profileInfo.matchPreference),
-  };
+  console.log(userStore.user);
 
   toggleIsEdit();
 };
