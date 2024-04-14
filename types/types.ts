@@ -184,7 +184,7 @@ declare global {
     customerId: string;
     businessId: string;
     serviceType: string;
-    cserivceId: string;
+    cserviceId: string;
     bserviceId: string;
     matchScore: number;
     updatedAt: Date;

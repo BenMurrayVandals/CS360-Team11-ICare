@@ -1,248 +1,203 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
 generator client {
-    provider = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 datasource db {
-    provider = "sqlite"
-    url      = "file:./dev.db"
+  provider = "sqlite"
+  url      = "file:./dev.db"
 }
 
 model Customer {
-    id              String   @id @default(uuid())
-    userType        String   @default("customer")
-    username        String   @unique
-    email           String   @unique
-    emailNormalized String   @unique
-    address         String?  @unique
-    password        String
-    firstName       String
-    lastName        String
-    phoneNumber     String?
-    matchPreference Float    @default(50)
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-
-    //Relationships
-    lawns           CustomerLawn[]
-    morgage         CustomerMorgage[]
-    interior        CustomerInterior[]
-    insurance       CustomerInsurance[]
-    internet        CustomerInternet[]
-    cell            CustomerCell[]
-
-    matched         Matched[]
-    notification    Notification[]
-    blocked         Blocked[] 
+  id              String             @id @default(uuid())
+  userType        String             @default("customer")
+  username        String             @unique
+  email           String             @unique
+  emailNormalized String             @unique
+  address         String?            @unique
+  password        String
+  firstName       String
+  lastName        String
+  phoneNumber     String?
+  matchPreference Float              @default(50)
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+  blocked         Blocked[]
+  cell            CustomerCell?
+  insurance       CustomerInsurance?
+  interior        CustomerInterior?
+  internet        CustomerInternet?
+  lawns           CustomerLawn?
+  morgage         CustomerMorgage?
+  matched         Matched[]
+  notification    Notification[]
 }
 
 model Business {
-    id              String   @id @default(uuid())
-    userType        String   @default("business")
-    businessName    String   @unique
-    email           String   @unique
-    emailNormalized String   @unique
-    password        String
-    phoneNumber     String?
-    createdAt       DateTime @default(now())
-    updatedAt       DateTime @updatedAt
-
-    //Relationships
-    lawns           BusinessLawn[]
-    morgage         BusinessMorgage[]
-    interior        BusinessInterior[]
-    insurance       BusinessInsurance[]
-    internet        BusinessInternet[]
-    cell            BusinessCell[]
-
-    matched         Matched[]
-    notification    Notification[]
-    blocked         Blocked[] 
+  id              String              @id @default(uuid())
+  userType        String              @default("business")
+  businessName    String              @unique
+  email           String              @unique
+  emailNormalized String              @unique
+  password        String
+  phoneNumber     String?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  blocked         Blocked[]
+  cell            BusinessCell[]
+  insurance       BusinessInsurance[]
+  interior        BusinessInterior[]
+  internet        BusinessInternet[]
+  lawns           BusinessLawn[]
+  morgage         BusinessMorgage[]
+  matched         Matched[]
+  notification    Notification[]
 }
 
-//LAWN SERVICES
 model CustomerLawn {
-    id            String      @id @default(uuid())
-    serviceType   String      @default("Lawn")
-    customerId    String      @unique // Foreign key referencing Customer.id
-    lawnSize      Float
-    costPerMonth  Float
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id           String   @id @default(uuid())
+  serviceType  String   @default("Lawn")
+  customerId   String   @unique
+  lawnSize     Float
+  costPerMonth Float
+  customer     Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessLawn {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Lawn")
-    businessId     String      // Foreign key referencing Customer.id
-    costPerSqFoot  Float 
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id            String   @id @default(uuid())
+  serviceType   String   @default("Lawn")
+  businessId    String
+  costPerSqFoot Float
+  business      Business @relation(fields: [businessId], references: [id])
 }
 
-//Interior Services
 model CustomerInterior {
-    id            String      @id @default(uuid())
-    serviceType   String      @default("Interior")
-    customerId    String      @unique // Foreign key referencing Customer.id
-    sqFootage     Float
-    costPerMonth  Float
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id           String   @id @default(uuid())
+  serviceType  String   @default("Interior")
+  customerId   String   @unique
+  sqFootage    Float
+  costPerMonth Float
+  customer     Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessInterior {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Interior")
-    businessId     String   // Foreign key referencing Customer.id
-    costPerSqFoot  Float 
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id            String   @id @default(uuid())
+  serviceType   String   @default("Interior")
+  businessId    String
+  costPerSqFoot Float
+  business      Business @relation(fields: [businessId], references: [id])
 }
 
-//Morgage Services
 model CustomerMorgage {
-    id              String      @id @default(uuid())
-    serviceType     String      @default("Morgage")
-    customerId      String      @unique // Foreign key referencing Customer.id
-    sqFootage       Float
-    costPerMonth    Float
-    insuranceRate   Float
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id            String   @id @default(uuid())
+  serviceType   String   @default("Morgage")
+  customerId    String   @unique
+  sqFootage     Float
+  costPerMonth  Float
+  insuranceRate Float
+  customer      Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessMorgage {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Morgage")
-    businessId     String      // Foreign key referencing Customer.id
-    costPerSqFoot  Float 
-    insuranceRate  Float
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id            String   @id @default(uuid())
+  serviceType   String   @default("Morgage")
+  businessId    String
+  costPerSqFoot Float
+  insuranceRate Float
+  business      Business @relation(fields: [businessId], references: [id])
 }
 
-//Home Insurance Services
 model CustomerInsurance {
-    id                  String     @id @default(uuid())
-    serviceType         String      @default("Insurance")
-    customerId          String     @unique // Foreign key referencing Customer.id
-    sqFootage           Float
-    totalCoverage       Float
-    costPerMonth        Float
-    allowLessCoverage   Boolean
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id                String   @id @default(uuid())
+  serviceType       String   @default("Insurance")
+  customerId        String   @unique
+  sqFootage         Float
+  totalCoverage     Float
+  costPerMonth      Float
+  allowLessCoverage Boolean
+  customer          Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessInsurance {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Insurance")
-    businessId     String      // Foreign key referencing Customer.id
-    costPerSqFoot  Float 
-    totalCoverage  Float
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id            String   @id @default(uuid())
+  serviceType   String   @default("Insurance")
+  businessId    String
+  costPerSqFoot Float
+  totalCoverage Float
+  business      Business @relation(fields: [businessId], references: [id])
 }
 
-//Internet Services
 model CustomerInternet {
-    id                  String     @id @default(uuid())
-    serviceType         String      @default("Internet")
-    customerId          String     @unique // Foreign key referencing Customer.id
-    speed               Float
-    costPerMonth        Float
-    allowLessSpeed      Boolean
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id             String   @id @default(uuid())
+  serviceType    String   @default("Internet")
+  customerId     String   @unique
+  speed          Float
+  costPerMonth   Float
+  allowLessSpeed Boolean
+  customer       Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessInternet {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Internet")
-    businessId     String      // Foreign key referencing Customer.id
-    costPerMonth   Float 
-    speed          Float
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id           String   @id @default(uuid())
+  serviceType  String   @default("Internet")
+  businessId   String
+  costPerMonth Float
+  speed        Float
+  business     Business @relation(fields: [businessId], references: [id])
 }
 
-//Cell Services
 model CustomerCell {
-    id                  String     @id @default(uuid())
-    serviceType         String      @default("Cell")
-    customerId          String     @unique // Foreign key referencing Customer.id
-    GBPerMonth          Float
-    costPerMonth        Float
-    allowLessGB         Boolean
-
-    // Define the relationship to the Customer model
-    customer      Customer @relation(fields: [customerId], references: [id])
+  id           String   @id @default(uuid())
+  serviceType  String   @default("Cell")
+  customerId   String   @unique
+  GBPerMonth   Float
+  costPerMonth Float
+  allowLessGB  Boolean
+  customer     Customer @relation(fields: [customerId], references: [id])
 }
 
 model BusinessCell {
-    id             String      @id @default(uuid())
-    serviceType    String      @default("Cell")
-    businessId     String      // Foreign key referencing Customer.id
-    costPerMonth   Float 
-    GBPerMonth     Float
-
-    // Define the relationship to the Business model
-    business      Business @relation(fields: [businessId], references: [id])
+  id           String   @id @default(uuid())
+  serviceType  String   @default("Cell")
+  businessId   String
+  costPerMonth Float
+  GBPerMonth   Float
+  business     Business @relation(fields: [businessId], references: [id])
 }
 
-//MISC Tables
-
 model Matched {
-    id                String   @id @default(uuid())
-    customerId        String
-    businessId        String
-    serviceType       String
-    cserivceId        String
-    bserviceId        String
-    matchScore        Float
-    updatedAt         DateTime @default(now())
-    notified          Boolean  @default(false)
-    acceptStatus      Boolean  @default(false)
-
-    customer         Customer @relation(fields: [customerId], references: [id])
-    business         Business @relation(fields: [businessId], references: [id])
-
-    //Relationships
-    notification    Notification[]
+  id           String         @id @default(uuid())
+  customerId   String
+  businessId   String
+  serviceType  String
+  cserivceId   String
+  bserviceId   String
+  matchScore   Float
+  updatedAt    DateTime       @default(now())
+  notified     Boolean        @default(false)
+  acceptStatus Boolean        @default(false)
+  business     Business       @relation(fields: [businessId], references: [id])
+  customer     Customer       @relation(fields: [customerId], references: [id])
+  notification Notification[]
 }
 
 model Notification {
-    id                String   @id @default(uuid())
-    matchedId         String
-    customerId        String
-    businessId        String
-    customerAccept    Boolean
-    businessAccept    Boolean
-    sentAt            DateTime @default(now())
-
-    customer      Customer @relation(fields: [customerId], references: [id])
-    business      Business @relation(fields: [businessId], references: [id])
-    matched       Matched  @relation(fields: [matchedId],  references: [id])
+  id             String   @id @default(uuid())
+  matchedId      String
+  customerId     String
+  businessId     String
+  customerAccept Boolean
+  businessAccept Boolean
+  sentAt         DateTime @default(now())
+  matched        Matched  @relation(fields: [matchedId], references: [id])
+  business       Business @relation(fields: [businessId], references: [id])
+  customer       Customer @relation(fields: [customerId], references: [id])
 }
 
 model Blocked {
-    id                String      @id @default(uuid())
-    customerId        String
-    businessId        String
-    blockDate         DateTime @default(now())
-
-    customer      Customer @relation(fields: [customerId], references: [id])
-    business      Business @relation(fields: [businessId], references: [id])
+  id         String   @id @default(uuid())
+  customerId String
+  businessId String
+  blockDate  DateTime @default(now())
+  business   Business @relation(fields: [businessId], references: [id])
+  customer   Customer @relation(fields: [customerId], references: [id])
 }
