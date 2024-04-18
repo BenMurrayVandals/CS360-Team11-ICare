@@ -1,6 +1,11 @@
 import prisma from "~~/server/database/client";
 
-export default defineEventHandler(async (event) => {
+interface ReturnType {
+  business: IBusiness;
+  services: Record<string, Service[]>;
+}
+
+export default defineEventHandler(async (event): Promise<ReturnType | undefined> => {
   try {
     // const{ businessId } = await readBody(event);
     const { businessId } = (await getQuery(event)) as { businessId: string };
@@ -8,11 +13,11 @@ export default defineEventHandler(async (event) => {
       //it's a business Id
       throw createError({ statusCode: 500, message: "Bad ID" });
     }
-    const business = await prisma.business.findUnique({
+    const business = (await prisma.business.findUnique({
       where: {
         id: businessId,
       },
-    });
+    })) as IBusiness;
     //lawn info
     const lawnData = await prisma.businessLawn.findMany({
       where: {
@@ -52,14 +57,16 @@ export default defineEventHandler(async (event) => {
     const returnData = {
       //bundles up all the data to return
       business: business,
-      lawn: lawnData,
-      interior: interiorData,
-      morgage: morgageData,
-      insurance: insuranceData,
-      internet: internetData,
-      cell: cellData,
+      services: {
+        lawn: lawnData,
+        interior: interiorData,
+        morgage: morgageData,
+        insurance: insuranceData,
+        internet: internetData,
+        cell: cellData,
+      },
     };
-    return returnData;
+    return returnData as unknown as ReturnType;
   } catch (error) {
     if (error.code === "P2002") {
       // Prisma constraint violation error

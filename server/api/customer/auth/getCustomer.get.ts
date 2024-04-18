@@ -52,12 +52,14 @@ export default defineEventHandler(async (event) => {
     const returnData = {
       //bundles up all the data to return
       customer: customer,
-      lawn: lawnData,
-      interior: interiorData,
-      morgage: morgageData,
-      insurance: insuranceData,
-      internet: internetData,
-      cell: cellData,
+      services: {
+        lawn: lawnData,
+        interior: interiorData,
+        morgage: morgageData,
+        insurance: insuranceData,
+        internet: internetData,
+        cell: cellData,
+      },
     };
     return returnData;
   } catch (error) {
