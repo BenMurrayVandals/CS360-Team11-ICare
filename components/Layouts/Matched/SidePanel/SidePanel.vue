@@ -24,7 +24,7 @@
         'sm:overflow-x-hidden sm:overflow-y-auto sm:scrollbar-thin sm:scroll-track-transparent sm:scroll-thumb-dark':
           alwaysVisibleBreakpoint === 'sm',
       }"
-      class="shrink-0 bg-slate-900 max-w-full border-r-2 border-slate-800 transition-none"
+      class="shrink-0 bg-slate-900 max-w-full border-r-2 border-t-2 border-slate-800 transition-none"
     >
       <div>
         <!-- SIDE PANEL CONTENT SLOT OUTLET -->

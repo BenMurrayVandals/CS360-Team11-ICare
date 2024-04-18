@@ -3,13 +3,13 @@
     <!-- MAIN CONTAINER -->
     <div class="flex flex-col items-center justify-start bg-slate-950 h-screen overflow-hidden">
       <!-- NAVBAR -->
-      <NavBar />
+      <NavBar @toggleSidePanel="toggleSidePanel" />
       <!-- BODY -->
       <div
         class="flex w-full h-full overflow-hidden [&>:first-child>:first-child]:flex [&>:first-child>:first-child]:flex-col [&>:first-child>:first-child]:h-full [&>:first-child>:first-child]:overflow-hidden"
       >
         <!-- SIDE PANEL -->
-        <LayoutsMatchedSidePanel :size="'large'" :showSidePanel="showSidePanel" alwaysVisibleBreakpoint="lg">
+        <LayoutsMatchedSidePanel :size="'large'" :showSidePanel="showSidePanel">
           <!-- FRIEND LISTINGS -->
           <!-- <LayoutsMatchedSidePanelListings :noListings="friendsFiltered.length <= 0"> -->
           <LayoutsMatchedSidePanelListings>
@@ -29,7 +29,7 @@
                         @click="openUser(match.id, false)"
                         :key="match.id"
                         :userInfo="match"
-                        :subText="`${match?.matched?.length} pending matches`"
+                        :subText="`${match?.matched?.length} pending match${match?.matched?.length > 1 ? 'es' : ''}`"
                       />
                     </TransitionGroup>
                   </div>
@@ -47,7 +47,7 @@
                         @click="openUser(match.id, true)"
                         :key="match.id"
                         :userInfo="match"
-                        :subText="`${match?.matched?.length} matches`"
+                        :subText="`${match?.matched?.length} match${match?.matched?.length > 1 ? 'es' : ''}`"
                         isAccepted
                       />
                     </TransitionGroup>
@@ -234,7 +234,9 @@ const openUser = async (id: string, isAccepted: boolean) => {
   // If the Logged In User and the User being opened aren't friends, don't open the User details.
   // if (!userStore.user.users.friends.some((curFriend) => curFriend.toString() === id)) return;
   const match = (isAccepted ? acceptedMatches : pendingMatches).value.find((curMatch) => curMatch.id === id);
-  console.log("Match found: ", match);
+  // console.log("Match found: ", match);
+
+  if(!match) return
 
   // If the User's ID is different than the current URL Hash (Or if the URL doesn't have a Hash)
   if (route.hash.slice(1) !== id) {
@@ -281,7 +283,7 @@ const openUser = async (id: string, isAccepted: boolean) => {
   });
 
   // Closes the Side Panel
-  showSidePanel.value = false;
+  // showSidePanel.value = false;
   isSelectedUserAccepted.value = isAccepted;
 };
 

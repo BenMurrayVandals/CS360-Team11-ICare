@@ -110,7 +110,7 @@ export const useUserStore = defineStore("user", () => {
   // Resets the User State
   const $reset = () => {
     user.value = null;
-    matched.value = null;
+    // matched.value = null;
   };
 
   return {
