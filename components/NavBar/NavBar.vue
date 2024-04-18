@@ -4,8 +4,12 @@
     <NavBarButton v-if="!userStore.isLoggedIn" data="Login" path="/login" />
     <!-- SIGNUP -->
     <NavBarButton v-if="!userStore.isLoggedIn" data="Signup" path="/signup" />
+    <!-- MATCHES -->
+    <NuxtLink v-if="userStore.isLoggedIn" :to="route.path === '/' ? '/matches' : '/'">
+      <NavBarButton :data="route.path === '/' ? 'Matches' : 'Home'" />
+    </NuxtLink>
     <!-- LOGOUT -->
-    <NavBarButton v-else @click="logout" data="Logout" />
+    <NavBarButton v-if="userStore.isLoggedIn" @click="logout" data="Logout" />
   </header>
 </template>
 
@@ -15,4 +19,8 @@ import { useUserStore } from "~~/store/user";
 const { logout } = useAuth();
 
 const userStore = useUserStore();
+
+/* ROUTING */
+const route = useRoute();
+console.log(route)
 </script>

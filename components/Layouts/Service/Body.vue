@@ -87,7 +87,7 @@
             v-else-if="value.type === 'toggle'"
             size="medium"
             :title="value.title"
-            :text="capitalize(serviceRead[key]?.toString())"
+            :text="capitalize(serviceRead[key]?.toString() ?? 'false')"
           />
         </div>
       </div>
