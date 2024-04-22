@@ -279,7 +279,7 @@
       v-else-if="type === 'remove'"
       :class="{
         'w-2 h-2': size === 'small',
-        'w-[11px] h-[11px]': size === 'medium',
+        'w-3.5 h-3.5': size === 'medium',
         'w-[15px] h-[15px]': size === 'large',
         'w-[18px] h-[18px]': size === 'very large',
       }"
@@ -288,7 +288,7 @@
         name="material-symbols:close-rounded"
         :class="{
           'w-3.5 h-3.5 stroke-1': size === 'small',
-          'w-5 h-5 stroke-0': size === 'medium',
+          'w-5 h-5 stroke-1': size === 'medium',
           'w-[26px] h-[26px] stroke-0': size === 'large',
           'w-8 h-8 stroke-0': size == 'very large',
         }"
@@ -299,7 +299,7 @@
       v-else-if="type === 'checkmark'"
       :class="{
         'w-[9px] h-[7px] mt-px': size === 'small',
-        'w-[13px] h-2.5 mt-px': size === 'medium',
+        'w-4 h-2.5 mt-px': size === 'medium',
         'w-5 h-3.5 mt-px': size === 'large',
         'w-6 h-[17px] mt-0.5': size === 'very large',
       }"
@@ -308,7 +308,7 @@
         name="material-symbols:done-rounded"
         :class="{
           'w-3.5 h-3.5 stroke-1': size === 'small',
-          'w-5 h-5 stroke-0': size === 'medium',
+          'w-[22px] h-[22px] stroke-1': size === 'medium',
           'w-[30px] h-[30px] stroke-0': size === 'large',
           'w-9 h-9 stroke-0': size == 'very large',
         }"

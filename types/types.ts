@@ -198,7 +198,9 @@ declare global {
     updatedAt: Date;
     notified: boolean;
     acceptStatus: boolean;
-
+    business?: Partial<IBusiness>;
+    customer?: Partial<ICustomer>;
+    notification?: Partial<Notification[]>
   }
 
   /* NOTIFICATION */
@@ -218,6 +220,18 @@ declare global {
     customerId: string;
     businessId: string;
     blockDate: Date;
+  }
+
+  /* MATCHED SIDE PANEL */
+  interface UserSidePanel {
+    id: string,
+    name: string,
+    matched: Matched[]
+  }
+
+  interface UserSideInfo {
+    user: IUser;
+    services: Service[];
   }
 
   /* ALERTS */

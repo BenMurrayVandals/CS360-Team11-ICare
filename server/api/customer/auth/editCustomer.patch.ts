@@ -24,7 +24,7 @@ export default defineEventHandler(async (event) => {
         }
         const {email, phoneNumber, address, matchPreference} = await readBody(event);
         const updatedEmail = email || customer.email;
-        const updatedPhone = phoneNumber || customer.phoneNumber;
+        const updatedPhone = phoneNumber ?? customer.phoneNumber;
         // const updatedAddress = address || customer.address;
         const updatedMatchP = matchPreference || customer.matchPreference;
         const normEmail = v.normalizeEmail(updatedEmail);

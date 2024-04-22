@@ -18,7 +18,9 @@
 /* USER LISTINGS */
 .users-move,
 .users-enter-active,
-.users-leave-active {
+.users-leave-active,
+.users-section-enter-active,
+.users-section-leave-active {
   transition: all 0.3s ease;
 }
 
@@ -32,6 +34,11 @@
   z-index: 0;
   /* Ensures that leaving users are taken out of layout flow so that moving animations can be calculated correctly.  */
   position: absolute;
+}
+
+.users-section-enter-from,
+.users-section-leave-to {
+  opacity: 0;
 }
 
 .users-enter-from,

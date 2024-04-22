@@ -16,49 +16,71 @@
         </TransitionCustom>
       </div>
       <!-- RIGHT -->
-      <TransitionCustom name="fade" mode="out-in">
-        <div v-if="isEdit" class="flex items-center justify-center gap-x-2">
-          <!-- CONFIRM -->
-          <IconWithTooltip
-            v-if="serviceTypeInput?.selected"
-            @click="confirmChanges"
-            size="large"
-            iconType="checkmark"
-            color="white"
-            tooltipText="Confirm"
-            isAccent
-          />
-          <!-- CANCEL -->
-          <IconWithTooltip
-            @click="cancelChanges"
-            size="large"
-            iconType="cancel"
-            color="white"
-            tooltipText="Cancel"
-            isAccent
-          />
-        </div>
-        <div v-else class="flex items-center justify-center gap-x-2">
-          <!-- EDIT -->
-          <IconWithTooltip
-            @click="toggleIsEdit"
-            size="large"
-            iconType="edit"
-            color="white"
-            tooltipText="Edit"
-            isAccent
-          />
-          <!-- DELETE -->
-          <IconWithTooltip
-            @click="deleteService"
-            size="large"
-            iconType="remove"
-            color="white"
-            tooltipText="Delete"
-            isAccent
-          />
-        </div>
-      </TransitionCustom>
+      <div v-if="!isReadOnly">
+        <TransitionCustom name="fade" mode="out-in">
+          <div v-if="isEdit" class="flex items-center justify-center gap-x-2">
+            <!-- CONFIRM -->
+            <IconWithTooltip
+              v-if="serviceTypeInput?.selected"
+              @click="confirmChanges"
+              size="large"
+              iconType="checkmark"
+              color="white"
+              tooltipText="Confirm"
+              isAccent
+            />
+            <!-- CANCEL -->
+            <IconWithTooltip
+              @click="cancelChanges"
+              size="large"
+              iconType="cancel"
+              color="white"
+              tooltipText="Cancel"
+              isAccent
+            />
+          </div>
+          <div v-else class="flex items-center justify-center gap-x-2">
+            <!-- EDIT -->
+            <IconWithTooltip
+              @click="toggleIsEdit"
+              size="large"
+              iconType="edit"
+              color="white"
+              tooltipText="Edit"
+              isAccent
+            />
+            <!-- DELETE -->
+            <IconWithTooltip
+              @click="deleteService"
+              size="large"
+              iconType="remove"
+              color="white"
+              tooltipText="Delete"
+              isAccent
+            />
+          </div>
+        </TransitionCustom>
+      </div>
+      <div v-else-if="!isAcceptedMatch" class="flex items-center justify-center gap-x-2">
+        <!-- ACCEPT -->
+        <IconWithTooltip
+          @click="$emit('acceptMatch', service.id)"
+          size="large"
+          iconType="checkmark"
+          color="white"
+          tooltipText="Accept"
+          isAccent
+        />
+        <!-- DENY -->
+        <IconWithTooltip
+          @click="$emit('denyMatch', service.id)"
+          size="large"
+          iconType="remove"
+          color="white"
+          tooltipText="Deny"
+          isAccent
+        />
+      </div>
     </header>
     <main>
       <LayoutsServiceBody
@@ -67,7 +89,7 @@
         :serviceRead="service"
         :serviceType="isEdit ? serviceTypeInput.selected : service.serviceType"
         :serviceInputs="
-          serviceInputs[userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.serviceType] ?? null
+          serviceInputs[isOppositeUserType ? userStore.oppositeUserType : userStore.user?.userType][isEdit ? serviceTypeInput.selected : service.serviceType] ?? null
         "
         :isEdit="isEdit"
       />
@@ -85,15 +107,25 @@ const { generateID, deepCopy } = useUtilities();
 
 const props = defineProps<{
   service: Service;
+  isReadOnly?: boolean;
+  isAcceptedMatch?: boolean;
+  isOppositeUserType?: boolean;
+}>();
+
+const emits = defineEmits<{
+  (e: "acceptMatch", serviceID: string);
+  (e: "denyMatch", serviceID: string);
 }>();
 
 const serviceStore = useServiceStore();
 const userStore = useUserStore();
 
 /* EDIT MODE */
-const isEdit = ref(props.service?.serviceType ? false : true);
+const isEdit = ref(props.service?.serviceType || props.isReadOnly ? false : true);
 
 const toggleIsEdit = () => {
+  if (props.isReadOnly) isEdit.value = false;
+
   isEdit.value = !isEdit.value;
 };
 
@@ -206,7 +238,7 @@ const serviceTypeOptions: { id: string; text: string }[] = [
 const availableServiceTypeOptions = computed(() =>
   serviceTypeOptions.filter(
     (curOption) =>
-      serviceStore.services.every((curService) => curService.serviceType !== curOption.text) ||
+      serviceStore.services?.every((curService) => curService?.serviceType !== curOption.text) ||
       props.service.serviceType === curOption.text
   )
 );

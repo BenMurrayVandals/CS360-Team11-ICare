@@ -25,7 +25,7 @@ export default defineEventHandler(async (event) => {
         const {businessName, email, phoneNumber} = await readBody(event);
         const updatedName = businessName || business.businessName;
         const updatedEmail = email || business.email;
-        const updatedPhone = phoneNumber || business.phoneNumber;
+        const updatedPhone = phoneNumber ?? business.phoneNumber;
         const normEmail = v.normalizeEmail(updatedEmail);
         const updatedData = {
           businessName: updatedName,

@@ -12,7 +12,7 @@ export const useForm = () => {
   /* PHONE NUMBER */
   // Converts a phone number in the input selection format into a string.
   const phoneNumberSelectedToStr = ({ areaCode, prefix, lineNumber }: PhoneNumberSelected) =>
-    `(${areaCode})-${prefix}-${lineNumber}`;
+    areaCode || prefix || lineNumber ? `(${areaCode})-${prefix}-${lineNumber}` : "";
 
   // Converts a phone number in string format into phone number input selection format.
   const phoneNumberStrToSelected = (phoneNum: string): PhoneNumberSelected => ({
@@ -24,27 +24,29 @@ export const useForm = () => {
   /* MATCH PREFERENCE */
   const matchPreferenceStrToNum = (matchPreference: MatchPreference) => {
     switch (matchPreference) {
-      case 'Any':
-        return 25
-      case 'Good':
-        return 50
-      case 'Best':
-        return 75
-      default: return 0
+      case "Any":
+        return 25;
+      case "Good":
+        return 50;
+      case "Best":
+        return 75;
+      default:
+        return 0;
     }
-  }
+  };
 
   const matchPreferenceNumToStr = (matchPreference: number): MatchPreference => {
     switch (matchPreference) {
       case 25:
-        return "Any"
+        return "Any";
       case 50:
-        return "Good"
+        return "Good";
       case 75:
-        return "Best"
-      default: return "None"
+        return "Best";
+      default:
+        return "None";
     }
-  }
+  };
 
   /* ALERTS */
   // Adds the passed 'alert' to the passed 'key' in the passed 'alerts' Generic Object, and then returns the new Generic Alerts Object.
