@@ -224,8 +224,12 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
                 costMatchScore = 0
             }
             let finalMatchScore = Math.round(((costMatchScore)/100)*100)
-            const matchEntry = await prisma.matched.create({
-                data: {customerId: service.customerId, businessId: businessService.businessId, serviceType: serviceType, cserivceId: service.id, bserviceId: businessService.id, matchScore: finalMatchScore}
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: service.id,
+                    bserviceId: businessService.id
+                },
+                data: { matchScore: finalMatchScore},
             })
         })
     }
@@ -243,8 +247,12 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
                 costMatchScore = 0
             }
             let finalMatchScore = Math.round(((costMatchScore)/100)*100)
-            const matchEntry = await prisma.matched.create({
-                data: {customerId: service.customerId, businessId: businessService.businessId, serviceType: serviceType, cserivceId: service.id, bserviceId: businessService.id, matchScore: finalMatchScore}
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: service.id,
+                    bserviceId: businessService.id
+                },
+                data: { matchScore: finalMatchScore},
             })
         })
     }
@@ -262,8 +270,12 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
                 costMatchScore = 0
             }
             let finalMatchScore = Math.round(((costMatchScore)/100)*100)
-            const matchEntry = await prisma.matched.create({
-                data: {customerId: service.customerId, businessId: businessService.businessId, serviceType: serviceType, cserivceId: service.id, bserviceId: businessService.id, matchScore: finalMatchScore}
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: service.id,
+                    bserviceId: businessService.id
+                },
+                data: { matchScore: finalMatchScore},
             })
         })
     }
@@ -281,8 +293,12 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
                 costMatchScore = 0
             }
             let finalMatchScore = Math.round(((costMatchScore)/100)*100)
-            const matchEntry = await prisma.matched.create({
-                data: {customerId: service.customerId, businessId: businessService.businessId, serviceType: serviceType, cserivceId: service.id, bserviceId: businessService.id, matchScore: finalMatchScore}
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: service.id,
+                    bserviceId: businessService.id
+                },
+                data: { matchScore: finalMatchScore},
             })
         })
     }
@@ -307,7 +323,7 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
                 costMatchScore = 0
             }
             let finalMatchScore = Math.round(((costMatchScore+speedMatchScore)/200)*100)
-            const matchEntry = await prisma.matched.update({
+            const matchEntry = await prisma.matched.updateMany({
                 where: {
                     cserivceId: service.id,
                     bserviceId: businessService.id
@@ -328,8 +344,125 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
     }) */
 }
 
-export const editMatchScoreBuisness = async (custId: string) => {
-
+export const editMatchScoreBuisness = async (businessId: string, businessType: string) => {
+    if(businessType == "Lawn") {
+        const business = await prisma.businessInternet.findUnique({
+            where: {id: businessId}
+        })
+        const customerServices = await prisma.customerInternet.findMany()
+        customerServices.forEach(async(customerService) => {
+            if(customerService.costPerMonth == 0) {
+                customerService.costPerMonth = 1
+            }
+            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.costPerMonth)**2+100
+            if(costMatchScore < 0) {
+                costMatchScore = 0
+            }
+            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: customerService.id,
+                    bserviceId: business.id
+                },
+                data: { matchScore: finalMatchScore},
+            })
+        })
+    }
+    else if(businessType == "Interior") {
+        const business = await prisma.businessInterior.findUnique({
+            where: {id: businessId}
+        })
+        const customerServices = await prisma.customerInterior.findMany()
+        customerServices.forEach(async(customerService) => {
+            if(customerService.costPerMonth == 0) {
+                customerService.costPerMonth = 1
+            }
+            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.costPerSqFoot*customerService.sqFootage)**2+100
+            if(costMatchScore < 0) {
+                costMatchScore = 0
+            }
+            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: customerService.id,
+                    bserviceId: business.id
+                },
+                data: { matchScore: finalMatchScore},
+            })
+        })
+    }
+    else if(businessType == "Morgage") {
+        const business = await prisma.businessMorgage.findUnique({
+            where: {id: businessId}
+        })
+        const customerServices = await prisma.customerMorgage.findMany()
+        customerServices.forEach(async(customerService) => {
+            if(customerService.costPerMonth == 0) {
+                customerService.costPerMonth = 1
+            }
+            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.insuranceRate)**2+100
+            if(costMatchScore < 0) {
+                costMatchScore = 0
+            }
+            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: customerService.id,
+                    bserviceId: business.id
+                },
+                data: { matchScore: finalMatchScore},
+            })
+        })
+    }
+    else if(businessType == "Insurance") {
+        const business = await prisma.businessInsurance.findUnique({
+            where: {id: businessId}
+        })
+        const customerServices = await prisma.customerInsurance.findMany()
+        customerServices.forEach(async(customerService) => {
+            if(customerService.costPerMonth == 0) {
+                customerService.costPerMonth = 1
+            }
+            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.costPerSqFoot*customerService.sqFootage)**2+100
+            if(costMatchScore < 0) {
+                costMatchScore = 0
+            }
+            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: customerService.id,
+                    bserviceId: business.id
+                },
+                data: { matchScore: finalMatchScore},
+            })
+        })
+    }
+    else if(businessType == "Internet") {
+        const business = await prisma.businessInternet.findUnique({
+            where: {id: businessId}
+        })
+        const customerServices = await prisma.customerInternet.findMany()
+        customerServices.forEach(async(customerService) => {
+            if(customerService.costPerMonth == 0) {
+                customerService.costPerMonth = 1
+            }
+            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.costPerMonth)**2+100
+            if(costMatchScore < 0) {
+                costMatchScore = 0
+            }
+            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            const matchEntry = await prisma.matched.updateMany({
+                where: {
+                    cserivceId: customerService.id,
+                    bserviceId: business.id
+                },
+                data: { matchScore: finalMatchScore},
+            })
+        })
+    }
+    else {
+        return null;
+    }
 }
 
 export const deleteMatchScoreCustomer = async (custId: string) => {
