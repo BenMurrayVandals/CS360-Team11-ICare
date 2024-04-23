@@ -125,7 +125,7 @@ import { useUserStore } from "~~/store/user";
 const { positionLeavingElement } = useTransitions();
 
 definePageMeta({
-  middleware: ["is-logged-in"],
+  middleware: ["is-logged-in", "get-all-matches"],
 });
 
 const userStore = useUserStore();
@@ -199,15 +199,15 @@ const markMatch = async (serviceID: string, isAccepted: boolean) => {
   );
 
   if (index !== -1) {
-    let updatedMatch;
-    // const updatedMatch = await $fetch<Matched>(`/api/system/matched/${isAccepted ? "accept" : "reject"}Match`, {
-    //   method: "PATCH",
-    //   body: {
-    //     matchedId: matched.value[index]?.id,
-    //   },
-    // });
+    // let updatedMatch;
+    const updatedMatch = await $fetch<Matched>(`/api/system/matched/${isAccepted ? "accept" : "reject"}Match`, {
+      method: "PATCH",
+      body: {
+        matchedId: matched.value[index]?.id,
+      },
+    });
 
-    // if (!updatedMatch) return;
+    if (!updatedMatch) return;
 
     matched.value[index].notified = updatedMatch?.notified ?? true;
     matched.value[index].acceptStatus = updatedMatch?.acceptStatus ?? isAccepted;
@@ -236,7 +236,7 @@ const openUser = async (id: string, isAccepted: boolean) => {
   const match = (isAccepted ? acceptedMatches : pendingMatches).value.find((curMatch) => curMatch.id === id);
   // console.log("Match found: ", match);
 
-  if(!match) return
+  if (!match) return;
 
   // If the User's ID is different than the current URL Hash (Or if the URL doesn't have a Hash)
   if (route.hash.slice(1) !== id) {

@@ -1,5 +1,6 @@
 import prisma from "~~/server/database/client";
 import { getLoggedInUser } from "~~/server/services/authService";
+import { customerAddsServiceMatchScoreCalculation } from "~~/server/services/matchService";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -28,6 +29,9 @@ export default defineEventHandler(async (event) => {
         costPerMonth,
       },
     });
+
+    await customerAddsServiceMatchScoreCalculation(newLawnService.id, newLawnService.serviceType);
+
     return newLawnService;
   } catch (error) {
     if (error.code === "P2002") {

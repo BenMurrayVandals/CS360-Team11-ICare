@@ -17,7 +17,7 @@ export const useUserStore = defineStore("user", () => {
   // Compites whether the Logged In User is a business.
   const isBusiness = computed(() => user.value?.userType === "business");
 
-  const oppositeUserType = computed<UserType>(() => isCustomer.value ? 'business' : 'customer')
+  const oppositeUserType = computed<UserType>(() => (isCustomer.value ? "business" : "customer"));
 
   // Computes whether or not there is a Logged In User.
   const isLoggedIn = computed(() => (user.value ? true : false));
@@ -106,11 +106,29 @@ export const useUserStore = defineStore("user", () => {
     },
   ]);
 
+  const getAllMatches = async (requestHeaders = useRequestHeaders(["cookie"])): Promise<Matched[] | undefined> => {
+    try {
+      const allMatches = await $fetch<Matched[]>(`/api/system/matched/getMatched`, {
+        headers: requestHeaders,
+      });
+
+      // console.log(allMatches)
+
+      if (allMatches) {
+        matched.value = allMatches;
+      }
+    } catch (err) {
+      console.log("ERROR: ", err);
+    }
+
+    return matched.value;
+  };
+
   /* RESET USER STATE */
   // Resets the User State
   const $reset = () => {
     user.value = null;
-    // matched.value = null;
+    matched.value = null;
   };
 
   return {
@@ -122,6 +140,7 @@ export const useUserStore = defineStore("user", () => {
     oppositeUserType,
     isLoggedIn,
     matched,
+    getAllMatches,
     $reset,
   };
 });

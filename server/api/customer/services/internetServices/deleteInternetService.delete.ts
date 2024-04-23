@@ -1,11 +1,12 @@
 import prisma from "~~/server/database/client";
 import { getLoggedInUser } from "~~/server/services/authService";
+import { deleteMatchScoreCustomer } from "~~/server/services/matchService";
 
 export default defineEventHandler(async (event) => {
   try {
     //Fetch current user
     const user = await getLoggedInUser(event);
-
+    
     //If no one's logged in, or user isn't a customer
     if (!user || user?.userType != "customer") {
       throw createError({ statusCode: 401, message: "Unauthorized: User of wrong type (Customer Internet)" });
@@ -16,7 +17,7 @@ export default defineEventHandler(async (event) => {
 
     // Parse the id from event
     const { id } = await readBody(event);
-
+    
     // Validate request body fields
     if (!id) {
       throw createError({ statusCode: 400, message: "Bad Request: Missing required fields" });
@@ -45,6 +46,7 @@ export default defineEventHandler(async (event) => {
         id: id,
       },
     });
+    await deleteMatchScoreCustomer(deletedInternetService.id);
     return deletedInternetService;
   } catch (error) {
     if (error.code === "P2002") {

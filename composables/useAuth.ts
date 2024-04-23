@@ -105,6 +105,8 @@ export const useAuth = () => {
         // Assigns the returned customer to the 'user' User State.
         userStore.user = customer;
 
+        await userStore.getAllMatches();
+
         // Routes to the created Home page
         return navigateTo("/");
       }
@@ -136,6 +138,8 @@ export const useAuth = () => {
       if (business && !errors) {
         // Assigns the returned business to the 'user' User State.
         userStore.user = business;
+
+        // await userStore.getAllMatches()
 
         // Routes to the created Home page
         return navigateTo("/");
@@ -198,6 +202,8 @@ export const useAuth = () => {
         // If a User with an ID matching the encrypted ID of the Logged In User stored in the 'auth_token' Cookie is found
         if (user) {
           userStore.user = user;
+
+          await userStore.getAllMatches(cookieHeaders);
         }
       } catch (err) {
         console.log("ERROR: ", err);
