@@ -27,7 +27,7 @@ export default defineEventHandler(async (event) => { //pass in matchedId via eve
             acceptStatus: false,
           }
         });
-        const rejectNotification = await prisma.notification.update({
+        const rejectNotification = await prisma.notification.updateMany({
           where: {
             customerId: customerId,
             matchedId: matchedId
