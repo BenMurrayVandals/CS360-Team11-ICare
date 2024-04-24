@@ -62,7 +62,7 @@ export const customerAddsServiceMatchScoreCalculation = async (serviceId: string
       if (service.costPerMonth == 0) {
         service.costPerMonth = 1;
       }
-      let costMatchScore = -(25 / service.costPerMonth ** 2) * (businessService.insuranceRate ** 2) + 100;
+      let costMatchScore = -(25 / service.costPerMonth ** 2) * ((businessService.costPerSqFoot * service.sqFootage) ** 2) + 100;
       if (costMatchScore < 0) {
         costMatchScore = 0;
       }
@@ -245,7 +245,7 @@ export const businessAddsServiceMatchScoreCalculation = async (businessId: strin
       if (customerService.costPerMonth == 0) {
         customerService.costPerMonth = 1;
       }
-      let costMatchScore = -(25 / customerService.costPerMonth ** 2) * business.insuranceRate ** 2 + 100;
+      let costMatchScore = -(25 / customerService.costPerMonth ** 2) * ((business.costPerSqFoot * customerService.sqFootage) ** 2) + 100;
       if (costMatchScore < 0) {
         costMatchScore = 0;
       }
@@ -424,7 +424,7 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
             if(service.costPerMonth == 0) {
                 service.costPerMonth = 1
             }
-            let costMatchScore = -(25/service.costPerMonth**2)*(businessService.insuranceRate)**2+100
+            let costMatchScore = -(25 / service.costPerMonth ** 2) * ((businessService.costPerSqFoot * service.sqFootage) ** 2) + 100;
             if(costMatchScore < 0) {
                 costMatchScore = 0
             }
@@ -606,7 +606,7 @@ export const editMatchScoreBuisness = async (businessId: string, businessType: s
             if(customerService.costPerMonth == 0) {
                 customerService.costPerMonth = 1
             }
-            let costMatchScore = -(25/customerService.costPerMonth**2)*(business.insuranceRate)**2+100
+            let costMatchScore = -(25 / customerService.costPerMonth ** 2) * ((business.costPerSqFoot * customerService.sqFootage) ** 2) + 100;
             if(costMatchScore < 0) {
                 costMatchScore = 0
             }
