@@ -62,7 +62,7 @@ export const customerAddsServiceMatchScoreCalculation = async (serviceId: string
       if (service.costPerMonth == 0) {
         service.costPerMonth = 1;
       }
-      let costMatchScore = -(25 / service.costPerMonth ** 2) * businessService.insuranceRate ** 2 + 100;
+      let costMatchScore = -(25 / service.costPerMonth ** 2) * (businessService.insuranceRate ** 2) + 100;
       if (costMatchScore < 0) {
         costMatchScore = 0;
       }
@@ -87,12 +87,18 @@ export const customerAddsServiceMatchScoreCalculation = async (serviceId: string
       if (service.costPerMonth == 0) {
         service.costPerMonth = 1;
       }
-      let costMatchScore =
-        -(25 / service.costPerMonth ** 2) * (businessService.costPerSqFoot * service.sqFootage) ** 2 + 100;
+      let costMatchScore = -(25 / service.costPerMonth ** 2) * (businessService.costPerSqFoot * service.sqFootage) ** 2 + 100;
       if (costMatchScore < 0) {
         costMatchScore = 0;
       }
-      let finalMatchScore = Math.round((costMatchScore / 100) * 100);
+      if (service.totalCoverage == 0) {
+        service.totalCoverage = 1;
+      }
+      let totalCoverageScore = -(25 / service.totalCoverage ** 2) * (businessService.totalCoverage) ** 2 + 100;
+      if (totalCoverageScore < 0) {
+        totalCoverageScore = 0;
+      }
+      let finalMatchScore = Math.round((costMatchScore+totalCoverageScore / 200) * 100);
       const matchEntry = await prisma.matched.create({
         data: {
           customerId: service.customerId,
@@ -253,12 +259,18 @@ export const businessAddsServiceMatchScoreCalculation = async (businessId: strin
       if (customerService.costPerMonth == 0) {
         customerService.costPerMonth = 1;
       }
-      let costMatchScore =
-        -(25 / customerService.costPerMonth ** 2) * (business.costPerSqFoot * customerService.sqFootage) ** 2 + 100;
+      let costMatchScore = -(25 / customerService.costPerMonth ** 2) * (business.costPerSqFoot * customerService.sqFootage) ** 2 + 100;
       if (costMatchScore < 0) {
         costMatchScore = 0;
       }
-      let finalMatchScore = Math.round((costMatchScore / 100) * 100);
+      if (customerService.totalCoverage == 0) {
+        customerService.totalCoverage = 1;
+      }
+      let totalCoverageScore = -(25 / customerService.totalCoverage ** 2) * (business.totalCoverage) ** 2 + 100;
+      if (totalCoverageScore < 0) {
+        totalCoverageScore = 0;
+      }
+      let finalMatchScore = Math.round((costMatchScore+totalCoverageScore / 200) * 100);
       const matchEntry = await prisma.matched.create({
         data: {
           customerId: customerService.customerId,
@@ -411,7 +423,14 @@ export const editMatchScoreCustomer = async (serviceId: string, serviceType: str
             if(costMatchScore < 0) {
                 costMatchScore = 0
             }
-            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            if(service.totalCoverage == 0) {
+              service.totalCoverage = 1
+            }
+            let totalCoverageScore = -(25 / service.totalCoverage ** 2) * (businessService.totalCoverage) ** 2 + 100;
+            if (totalCoverageScore < 0) {
+              totalCoverageScore = 0;
+            }
+            let finalMatchScore = Math.round((costMatchScore+totalCoverageScore / 200) * 100);
             const matchEntry = await prisma.matched.updateMany({
                 where: {
                     cserivceId: service.id,
@@ -570,7 +589,14 @@ export const editMatchScoreBuisness = async (businessId: string, businessType: s
             if(costMatchScore < 0) {
                 costMatchScore = 0
             }
-            let finalMatchScore = Math.round(((costMatchScore)/100)*100)
+            if (customerService.totalCoverage == 0) {
+              customerService.totalCoverage = 1;
+            }
+            let totalCoverageScore = -(25 / customerService.totalCoverage ** 2) * (business.totalCoverage) ** 2 + 100;
+            if (totalCoverageScore < 0) {
+              totalCoverageScore = 0;
+            }
+            let finalMatchScore = Math.round((costMatchScore+totalCoverageScore / 200) * 100);
             const matchEntry = await prisma.matched.updateMany({
                 where: {
                     cserivceId: customerService.id,
