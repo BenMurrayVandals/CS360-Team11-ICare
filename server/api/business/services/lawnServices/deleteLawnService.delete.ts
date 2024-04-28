@@ -1,6 +1,6 @@
 import prisma from "~~/server/database/client";
 import { getLoggedInUser } from "~~/server/services/authService";
-import { deleteMatchScoreBuisness } from "~~/server/services/matchService";
+import { deleteMatchScoreBusiness } from "~~/server/services/matchService";
 
 export default defineEventHandler(async (event) => {
   try {
@@ -46,7 +46,7 @@ export default defineEventHandler(async (event) => {
         id: id,
       },
     });
-    await deleteMatchScoreBuisness(deletedLawnService.id);
+    await deleteMatchScoreBusiness(deletedLawnService.id);
     return deletedLawnService;
   } catch (error) {
     if (error.code === "P2002") {

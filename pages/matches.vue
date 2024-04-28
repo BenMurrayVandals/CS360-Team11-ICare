@@ -40,7 +40,7 @@
                     <TransitionGroup @beforeLeave="positionLeavingElement" :name="'users'">
                       <LayoutsMatchedSidePanelListingsDivider
                         key="offlineUsersTitle"
-                        :title="`Accepted - ${numAcceptedMatches}`"
+                        :title="`${userStore.isCustomer ? 'Accepted' : 'Matches'} - ${numAcceptedMatches}`"
                       />
                       <LayoutsMatchedSidePanelListingsUser
                         v-for="match in acceptedMatches"
@@ -148,26 +148,31 @@ const matchesCondensed = computed<UserSidePanel[]>(
     [
       ...new Map(
         matched.value?.map((match) => [
-          match?.business?.id,
+          userStore.isCustomer ? match?.business?.id : match?.customer?.id,
           [
-            match?.business?.id,
+            userStore.isCustomer ? match?.business?.id : match?.customer?.id,
             {
-              id: match?.business?.id,
-              name: match?.business?.businessName,
+              id: userStore.isCustomer ? match?.business?.id : match?.customer?.id,
+              name: userStore.isCustomer ? match?.business?.businessName : match?.customer?.username,
             },
           ],
         ])
       ).values(),
     ]?.map(([key, value]) => ({
       ...(value as Object),
-      matched: matched.value.filter((match) => match.business?.id === key),
+      matched: matched.value.filter(
+        (match) => (userStore.isCustomer ? match.business?.id : match.customer?.id) === key
+      ),
     })) as UserSidePanel[]
 );
 
 const pendingMatches = computed<UserSidePanel[]>(() =>
   matchesCondensed.value
     ?.filter((curMatch) => curMatch.matched.some((match) => !match.notified))
-    ?.map((curMatch) => ({ ...curMatch, matched: curMatch.matched.filter((match) => !match.notified) }))
+    ?.map((curMatch) => ({
+      ...curMatch,
+      matched: curMatch.matched.filter((match) => !match.notified),
+    }))
 );
 
 const numPendingMatches = computed(() => matched.value.filter((curMatch) => !curMatch.notified)?.length);
@@ -195,7 +200,7 @@ const denyMatch = async (serviceID: string) => {
 
 const markMatch = async (serviceID: string, isAccepted: boolean) => {
   const index = matched.value.findIndex(
-    (curMatch) => (isCustomer.value ? curMatch.bserviceId : curMatch.cserviceId) === serviceID
+    (curMatch) => (isCustomer.value ? curMatch.bserviceId : curMatch.cserivceId) === serviceID
   );
 
   if (index !== -1) {
@@ -276,7 +281,7 @@ const openUser = async (id: string, isAccepted: boolean) => {
       selectedUser.value = {
         user: user.customer as unknown as IUser,
         services: services.filter((curService) =>
-          match?.matched?.some((curMatch) => curMatch.cserviceId === curService.id)
+          match?.matched?.some((curMatch) => curMatch.cserivceId === curService.id)
         ),
       };
     }

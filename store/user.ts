@@ -29,7 +29,7 @@ export const useUserStore = defineStore("user", () => {
       customerId: "customer",
       businessId: "220bf860-afee-4993-b129-6ba4de1b67cd",
       serviceType: "Lawn",
-      cserviceId: "CustomerLawn",
+      cserivceId: "CustomerLawn",
       bserviceId: "5168172d-74f8-49c0-927b-a5b51c4d04ab",
       matchScore: 100,
       updatedAt: new Date(Date.now()),
@@ -45,7 +45,7 @@ export const useUserStore = defineStore("user", () => {
       customerId: "customer",
       businessId: "220bf860-afee-4993-b129-6ba4de1b67cd",
       serviceType: "Interior",
-      cserviceId: "CustomerInterior",
+      cserivceId: "CustomerInterior",
       bserviceId: "58a6c06d-ebf3-471a-92e3-1dc54c776371",
       matchScore: 50,
       updatedAt: new Date(Date.now()),
@@ -61,7 +61,7 @@ export const useUserStore = defineStore("user", () => {
       customerId: "customer",
       businessId: "a4470d6a-9bd4-4836-addc-85767df00f2f",
       serviceType: "Internet",
-      cserviceId: "InternetCustomer",
+      cserivceId: "InternetCustomer",
       bserviceId: "e8576ac7-9e5d-4e06-b257-9aa222de4e21",
       matchScore: 75,
       updatedAt: new Date(Date.now()),
@@ -77,7 +77,7 @@ export const useUserStore = defineStore("user", () => {
       customerId: "customer",
       businessId: "a4470d6a-9bd4-4836-addc-85767df00f2f",
       serviceType: "Internet",
-      cserviceId: "InternetCustomer",
+      cserivceId: "InternetCustomer",
       bserviceId: "e709856a-d390-4e7d-8b3d-4f08a67f8692",
       matchScore: 75,
       updatedAt: new Date(Date.now()),
@@ -93,7 +93,7 @@ export const useUserStore = defineStore("user", () => {
       customerId: "customer",
       businessId: "a4470d6a-9bd4-4836-addc-85767df00f2f",
       serviceType: "Cell",
-      cserviceId: "CellCustomer",
+      cserivceId: "CellCustomer",
       bserviceId: "b6f43eef-0658-499e-bdf8-6de2786e9644",
       matchScore: 75,
       updatedAt: new Date(Date.now()),
@@ -108,7 +108,7 @@ export const useUserStore = defineStore("user", () => {
 
   const getAllMatches = async (requestHeaders = useRequestHeaders(["cookie"])): Promise<Matched[] | undefined> => {
     try {
-      const allMatches = await $fetch<Matched[]>(`/api/system/matched/getMatched`, {
+      const allMatches = await $fetch<Matched[]>(`/api/${user.value?.userType}/getMatched`, {
         headers: requestHeaders,
       });
 

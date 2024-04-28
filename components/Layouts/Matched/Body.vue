@@ -34,6 +34,12 @@
       </div>
       <!-- SERVICES -->
       <div class="flex flex-col items-start gap-y-6 w-full px-6 sm:p-8">
+        <LayoutsMatchedContact
+          v-if="userInfo.user.phoneNumber && userInfo.user.email"
+          :phoneNumber="userInfo.user.phoneNumber"
+          :email="userInfo.user.email"
+        />
+        <GeneralTitle v-if="userInfo.user.phoneNumber && userInfo.user.email" size="very large" text="Services" color="white" class="mt-6" />
         <TransitionGroup @beforeLeave="positionLeavingElement" name="users">
           <LayoutsService
             @acceptMatch="$emit('acceptMatch', $event)"

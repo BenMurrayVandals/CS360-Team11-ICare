@@ -192,7 +192,7 @@ declare global {
     customerId: string;
     businessId: string;
     serviceType: string;
-    cserviceId: string;
+    cserivceId: string;
     bserviceId: string;
     matchScore: number;
     updatedAt: Date;
